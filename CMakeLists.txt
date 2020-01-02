@@ -2,14 +2,14 @@
 # LP3_CORE
 #       Handles very rudimentary, basic stuff all the other libs need.
 # *********************************************************************
-project(lp3_core CXX)
-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
+project(Lp3_Core CXX)
+cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
 include(CMakePackageConfigHelpers)
 
 find_package(Boost REQUIRED)
-find_package(sdl2 2.0.7)
+find_package(sdl2 2.0.9 REQUIRED)
 
-add_library(core
+add_library(lp3_core
     ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/le.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/assert.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/casts.hpp
@@ -34,9 +34,9 @@ add_library(core
     ${CMAKE_CURRENT_SOURCE_DIR}/src/utils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/WCharToCharConverter.cpp
 )
-set_target_properties(core PROPERTIES OUTPUT_NAME "Lp3_Core")
+set_target_properties(lp3_core PROPERTIES OUTPUT_NAME "Lp3_Core")
 
-target_include_directories(core
+target_include_directories(lp3_core
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
@@ -44,12 +44,12 @@ target_include_directories(core
         src)
 
 # Note: GSL is assumed and obtained from cget.
-target_link_libraries(core PUBLIC Boost::boost sdl2::sdl2 sdl2::image)
+target_link_libraries(lp3_core PUBLIC Boost::boost sdl2::sdl2 sdl2::image)
 
 if ("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
-    target_sources(core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/js/platform.cpp)
+    target_sources(lp3_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/js/platform.cpp)
 else()
-    target_sources(core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/platform.cpp)
+    target_sources(lp3_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/platform.cpp)
 endif()
 
 
@@ -60,14 +60,14 @@ endif()
 
 install(DIRECTORY include/ DESTINATION include)
 
-install(TARGETS core EXPORT Lp3_Core-targets
+install(TARGETS lp3_core EXPORT Lp3_Core-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     INCLUDES DESTINATION include
 )
 
-add_library(lp3::core ALIAS core)
+add_library(lp3::core ALIAS lp3_core)
 install(EXPORT Lp3_Core-targets
     FILE Lp3_Core-targets.cmake
     NAMESPACE lp3::
