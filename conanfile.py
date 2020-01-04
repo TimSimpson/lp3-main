@@ -37,7 +37,9 @@ class Lp3Core(conans.ConanFile):
     )
     generators = "cmake_paths", "cmake_find_package"
 
-    exports_sources = "src/*", "include/*", "demos/*", "CMakeLists.txt"
+    exports_sources = (
+        "src/*", "include/*", "demos/*", "tests/*", "CMakeLists.txt"
+    )
 
     def build(self):
         cmake = conans.CMake(self)
