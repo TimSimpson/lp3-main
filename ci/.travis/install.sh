@@ -20,10 +20,11 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
 fi
 
 pip install aws
+pip install cget
 pip install conan --upgrade
 pip install conan_package_tools
 
 conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-
 conan remote add richter https://api.bintray.com/conan/timsimpson/richter
 conan user
+

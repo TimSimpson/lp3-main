@@ -1,7 +1,8 @@
 #!/bin/bash
-
 set -e
 set -x
+
+readonly scripts_dir="$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")"
 
 if [[ "$(uname -s)" == 'Darwin' ]]; then
     if which pyenv > /dev/null; then
@@ -10,4 +11,5 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     pyenv activate conan
 fi
 
-python build.py
+conan install
+"${scripts_dir}"/../run.sh

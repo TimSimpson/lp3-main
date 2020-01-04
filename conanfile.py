@@ -43,7 +43,9 @@ class Lp3Core(conans.ConanFile):
 
     def build(self):
         cmake = conans.CMake(self)
-        cmake.configure()
+        cmake.configure(defs={
+            "CMAKE_FIND_PACKAGE_PREFER_CONFIG":"TRUE",
+        })
         cmake.build()
 
     def package(self):

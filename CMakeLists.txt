@@ -6,8 +6,17 @@ project(Lp3_Core CXX)
 cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
 include(CMakePackageConfigHelpers)
 
+include("${CMAKE_BINARY_DIR}/conan_paths.cmake"
+        OPTIONAL
+        RESULT_VARIABLE using_conan)
+
+# TODO: if I keep onn supporting cget, simply set Catch2, gsl_microsoft to
+#       empty libraries if using_conan is false.
 find_package(Boost REQUIRED)
+find_package(Catch2 REQUIRED)
+find_package(gsl_microsoft REQUIRED)
 find_package(sdl2 2.0.9 REQUIRED)
+find_package(sdl2_image 2.0.5 REQUIRED)
 
 add_library(lp3_core
     ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/le.hpp
@@ -36,6 +45,12 @@ add_library(lp3_core
 )
 set_target_properties(lp3_core PROPERTIES OUTPUT_NAME "Lp3_Core")
 
+# Mandate the use of at least C++17 by everything that uses this
+target_compile_features(lp3_core
+    PUBLIC
+    cxx_std_17
+)
+
 target_include_directories(lp3_core
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -43,8 +58,12 @@ target_include_directories(lp3_core
     PRIVATE
         src)
 
-# Note: GSL is assumed and obtained from cget.
-target_link_libraries(lp3_core PUBLIC Boost::boost sdl2::sdl2 sdl2::image)
+target_link_libraries(lp3_core
+    PUBLIC gsl_microsoft::gsl_microsoft
+           Boost::boost
+           sdl2::sdl2
+           sdl2_image::sdl2_image
+)
 
 if ("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
     target_sources(lp3_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/js/platform.cpp)
@@ -103,27 +122,27 @@ endif()
 
 if (LP3_CORE_FULL)
     add_executable(ExitDemo ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
-    target_link_libraries(ExitDemo core)
+    target_link_libraries(ExitDemo lp3_core)
 
     add_executable(LogDemo ${CMAKE_CURRENT_SOURCE_DIR}/demos/LogDemo.cpp)
-    target_link_libraries(LogDemo core)
+    target_link_libraries(LogDemo lp3_core)
 
     add_executable(MainDemo ${CMAKE_CURRENT_SOURCE_DIR}/demos/MainDemo.cpp)
-    target_link_libraries(MainDemo core)
+    target_link_libraries(MainDemo lp3_core)
 
     add_executable(assert_tests ${CMAKE_CURRENT_SOURCE_DIR}/tests/assert_tests.cpp)
-    target_link_libraries(assert_tests core)
+    target_link_libraries(assert_tests lp3_core Catch2::Catch2)
     add_test(assert_tests assert_tests)
 
     add_executable(media_tests ${CMAKE_CURRENT_SOURCE_DIR}/tests/media_tests.cpp)
-    target_link_libraries(media_tests core)
+    target_link_libraries(media_tests lp3_core Catch2::Catch2)
     add_test(media_tests media_tests)
 
     add_executable(Sdl2Simple ${CMAKE_CURRENT_SOURCE_DIR}/demos/Sdl2Simple.cpp)
-    target_link_libraries(Sdl2Simple core)
+    target_link_libraries(Sdl2Simple lp3_core)
 
     add_executable(MultipleWindows ${CMAKE_CURRENT_SOURCE_DIR}/demos/MultipleWindows.cpp)
-    target_link_libraries(MultipleWindows core )
+    target_link_libraries(MultipleWindows lp3_core)
 
     if (LP3_SETUP_FOLDERS)
         set_target_properties (core PROPERTIES FOLDER core)
