@@ -1,42 +1,33 @@
 language: cpp
 
+clang: &clang
+  os: linux
+  dist: xenial
+  python: "3.7"
+  compiler: clang
+  addons:
+    apt:
+      sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-trusty-8
+      packages:
+        - clang-8
+        - libstdc++-8-dev
+        - python3-pip
+
 matrix:
   include:
     - name: "Clang 8.0 Release"
-      os: linux
-      dist: xenial
-      python: "3.7"
-      compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-8.0
-          packages:
-            - clang-8.0
-            - libstdc++-8-dev
+      <<: *clang
       env:
         - PROFILE=clang-8-r-static
     - name: "Clang 8.0 Debug"
-      os: linux
-      dist: xenial
-      python: "3.7"
-      compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-8.0
-          packages:
-            - clang-8.0
-            - libstdc++-8-dev
+      <<: *clang
       env:
         - PROFILE=clang-8-d-shared
 
 install:
-  - chmod +x .travis/install.sh
-  - ./.travis/install.sh
+  - ./ci/travis/install.sh
 
 script:
-  - chmod +x .travis/run.sh
-  - ./.travis/run.sh
+  - ./ci/travis/run.sh

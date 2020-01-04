@@ -1,13 +1,12 @@
 #! /bin/bash
-set -euo pipefail
-
 if [ "${PROFILE}" == '' ]; then
     echo 'PROFILE environment variable not defined.'
     exit 1
 fi
 
-readonly scripts_dir="$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")"
-readonly root_dir="${scripts_dir}/.."
+set -euo pipefail
+readonly root_dir="$(pwd)"
+readonly scripts_dir="${root_dir}/ci"
 readonly output_dir="${root_dir}/output"
 readonly profile_path="${scripts_dir}/profiles/${PROFILE}"
 readonly build_dir="${output_dir}/${PROFILE}"
@@ -19,5 +18,5 @@ fi
 
 mkdir -p "${build_dir}"
 cd "${build_dir}"
-conan install "${root_dir}" -pr="${profile_path}" --build all
+conan install "${root_dir}" -pr="${profile_path}" --build missing
 conan build "${root_dir}"

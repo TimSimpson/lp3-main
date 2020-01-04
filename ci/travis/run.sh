@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ "${TRAVIS_BUILD_DIR}" == '' ]; then
+    echo "This is intended too run on Travis CI."
+    exit 1
+fi
 set -e
 set -x
 
@@ -9,7 +13,11 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
         eval "$(pyenv init -)"
     fi
     pyenv activate conan
+else
+    export PATH="$(pwd)/venv/bin:${PATH}"
 fi
 
-conan install
+echo 'What version of Python is this?'
+python --version
+
 "${scripts_dir}"/../run.sh

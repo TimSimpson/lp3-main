@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ "${TRAVIS_BUILD_DIR}" == '' ]; then
+    echo "This is intended too run on Travis CI."
+    exit 1
+fi
 
 set -e
 set -x
@@ -7,7 +11,6 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     brew update || brew update
     brew outdated pyenv || brew upgrade pyenv
     brew install pyenv-virtualenv
-    brew install cmake || true
 
     if which pyenv > /dev/null; then
         eval "$(pyenv init -)"
@@ -17,14 +20,13 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     pyenv virtualenv 3.6.1 conan
     pyenv rehash
     pyenv activate conan
+    pip install conan --upgrade
+else
+    pip3 install virtualenv
+    python3 -m virtualenv "venv"
+    export PATH="$(pwd)/venv/bin:${PATH}"
+    pip install conan --upgrade
 fi
 
-pip install aws
-pip install cget
-pip install conan --upgrade
-pip install conan_package_tools
-
 conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-conan remote add richter https://api.bintray.com/conan/timsimpson/richter
 conan user
-
