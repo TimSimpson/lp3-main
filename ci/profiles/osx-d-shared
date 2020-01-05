@@ -1,8 +1,8 @@
 include(clang-8)
 
 [settings]
-os_build=Linux
-os=Linux
+os_build=Macos
+os=Macos
 build_type=Debug
 
 [options]
