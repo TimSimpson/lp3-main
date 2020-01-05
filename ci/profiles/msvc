@@ -1,2 +1,10 @@
-[build_requires]
-*:cmake_installer/3.16.1@conan/stable
+include(all)
+
+[settings]
+os_build=Windows
+arch_build=x86_64
+compiler=Visual Studio
+compiler.version=16
+compiler.cppstd=17
+os=Windows
+arch=x86_64

@@ -10,12 +10,15 @@ include("${CMAKE_BINARY_DIR}/conan_paths.cmake"
         OPTIONAL
         RESULT_VARIABLE using_conan)
 
+if(using_conan)
+    set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+endif()
 # TODO: if I keep onn supporting cget, simply set Catch2, gsl_microsoft to
 #       empty libraries if using_conan is false.
-find_package(Boost REQUIRED)
+find_package(Boost 1.71.0 REQUIRED)
 find_package(Catch2 REQUIRED)
 find_package(gsl_microsoft REQUIRED)
-find_package(sdl2 2.0.9 REQUIRED)
+find_package(sdl2 2.0.9 MODULE REQUIRED)
 find_package(sdl2_image 2.0.5 REQUIRED)
 
 add_library(lp3_core
