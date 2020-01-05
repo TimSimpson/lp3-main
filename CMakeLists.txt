@@ -54,6 +54,12 @@ target_compile_features(lp3_core
     cxx_std_17
 )
 
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(lp3_core
+        PUBLIC LP3_CORE_API_DYNAMIC
+    )
+endif()
+
 target_include_directories(lp3_core
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
