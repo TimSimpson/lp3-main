@@ -1,4 +1,3 @@
-#define LP3_CORE_API_CREATE
 #include <lp3/core/utils.hpp>
 #include <lp3/assert.hpp>
 #include <lp3/log.hpp>

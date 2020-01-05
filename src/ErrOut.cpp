@@ -1,4 +1,3 @@
-#define LP3_CORE_API_CREATE
 #include "ErrOut.hpp"
 #include <lp3/le.hpp>
 #ifdef LP3_COMPILE_TARGET_WINDOWS

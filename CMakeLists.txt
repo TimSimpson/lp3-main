@@ -66,10 +66,13 @@ target_include_directories(lp3_core
 # version of the runtime it was built with. IIRC this used to not be that big
 # of a problem with VS, but now it is, thus the disabled warnings.
 if(BUILD_SHARED_LIBS)
-    target_compile_definitions(lp3_core PUBLIC LP3_CORE_API_DYNAMIC)
-endif()
-if (MSVC)
-    target_compile_options(lp3_core PRIVATE /wd4251 /wd4275)
+    target_compile_definitions(lp3_core
+        PUBLIC  LP3_CORE_API_DYNAMIC
+        PRIVATE LP3_CORE_API_CREATE
+    )
+    if (MSVC)
+        target_compile_options(lp3_core PRIVATE /wd4251 /wd4275)
+    endif()
 endif()
 
 target_link_libraries(lp3_core
@@ -84,6 +87,22 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
 else()
     target_sources(lp3_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/platform.cpp)
 endif()
+
+target_precompile_headers(lp3_core
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/le.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/assert.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/casts.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/log.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/sdl.hpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/config.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/Exception.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/exit.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/utils.hpp
+)
+
 
 
 
@@ -159,7 +178,7 @@ if (LP3_CORE_FULL)
     target_link_libraries(MultipleWindows lp3_core)
 
     if (LP3_SETUP_FOLDERS)
-        set_target_properties (core PROPERTIES FOLDER core)
+        set_target_properties (lp3_core PROPERTIES FOLDER core)
         set_target_properties (ExitDemo PROPERTIES FOLDER core)
         set_target_properties (LogDemo PROPERTIES FOLDER core)
         set_target_properties (MainDemo PROPERTIES FOLDER core)
@@ -167,6 +186,18 @@ if (LP3_CORE_FULL)
         set_target_properties (media_tests PROPERTIES FOLDER core)
         set_target_properties (Sdl2Simple PROPERTIES FOLDER core)
         set_target_properties (MultipleWindows PROPERTIES FOLDER core)
+    endif()
+    if(BUILD_SHARED_LIBS)
+        if (MSVC)
+            target_compile_options(assert_tests PRIVATE /wd4251 /wd4275)
+            target_compile_options(ExitDemo PRIVATE /wd4251 /wd4275)
+            target_compile_options(LogDemo PRIVATE /wd4251 /wd4275)
+            target_compile_options(MainDemo PRIVATE /wd4251 /wd4275)
+            target_compile_options(assert_tests PRIVATE /wd4251 /wd4275)
+            target_compile_options(media_tests PRIVATE /wd4251 /wd4275)
+            target_compile_options(Sdl2Simple PRIVATE /wd4251 /wd4275)
+            target_compile_options(MultipleWindows PRIVATE /wd4251 /wd4275)
+        endif()
     endif()
 endif()
 
