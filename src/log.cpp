@@ -10,7 +10,7 @@
 #ifdef LP3_COMPILE_TARGET_DREAMCAST
     #include <kos.h>
 #endif
-#if defined(LP3_COMPILE_TARGET_LINUX) || defined(LP3_COMPILE_TARGET_EMSCRIPTEN)
+#if defined(LP3_COMPILE_TARGET_LINUX) || defined(__EMSCRIPTEN__)
     #include <stdio.h>
 #endif
 #include <SDL.h>
@@ -80,7 +80,7 @@ namespace {
 
 #if defined(LP3_COMPILE_TARGET_DREAMCAST) \
     || defined(LP3_COMPILE_TARGET_LINUX) \
-    || defined(LP3_COMPILE_TARGET_EMSCRIPTEN)
+    || defined(__EMSCRIPTEN__)
     void write_log(const char * const filename, const int lineNumber,
                    const LogLevel & level, const char * const message)
     {

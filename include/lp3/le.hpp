@@ -83,7 +83,7 @@
     #define LP3_COMPILE_TARGET_WINDOWS_THEN(...) /* __VA_ARGS__ */
 #endif
 
-#ifdef LP3_COMPILE_TARGET_EMSCRIPTEN
+#ifdef __EMSCRIPTEN__
   #ifndef NDEBUG
         #define LP3_COMPILE_WITH_DEBUGGING
   #endif
