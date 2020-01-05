@@ -1,4 +1,3 @@
-#define LP3_CORE_API_CREATE
 #include <lp3/core/utils.hpp>
 #include <boost/lexical_cast.hpp>
 #ifdef LP3_COMPILE_TARGET_WINDOWS

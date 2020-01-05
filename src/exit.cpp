@@ -1,4 +1,3 @@
-#define LP3_CORE_API_CREATE
 #include <lp3/core/exit.hpp>
 #include <list>
 #include <mutex>

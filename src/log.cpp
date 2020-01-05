@@ -1,4 +1,3 @@
-#define LP3_CORE_API_CREATE
 #include <lp3/log.hpp>
 #include <algorithm>
 #include <boost/lexical_cast.hpp>
