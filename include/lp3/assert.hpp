@@ -28,8 +28,7 @@
 namespace lp3::core {
 
 // Instantiate this class to make all failed asserts throw exceptions.
-LP3_CORE_API
-class AssertListener {
+class LP3_CORE_API AssertListener {
 public:
     AssertListener();
     ~AssertListener();
@@ -37,8 +36,7 @@ public:
 };
 
 // In test code, check for this exception type to be thrown.
-LP3_CORE_API
-class AssertFailed : public lp3::core::Exception {
+class LP3_CORE_API AssertFailed : public lp3::core::Exception {
 public:
 	AssertFailed();
 };

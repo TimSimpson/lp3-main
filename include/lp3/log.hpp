@@ -35,8 +35,7 @@ namespace lp3 { namespace core {
 // ----------------------------------------------------------------------------
 //      Defines the criticality of a logging message.
 // ----------------------------------------------------------------------------
-LP3_CORE_API
-enum class LogLevel
+enum class LP3_CORE_API LogLevel
 {
     Critical=0,
     Debug=4,

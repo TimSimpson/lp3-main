@@ -1,0 +1,7 @@
+include(clang-8)
+
+[settings]
+build_type=Debug
+
+[options]
+*:shared=True

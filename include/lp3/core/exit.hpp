@@ -3,23 +3,25 @@
 #pragma once
 
 #include <utility>
+#include "config.hpp"
 
 namespace lp3 { namespace core {
 
 typedef void(*ExitCall)();
 
 // This is called automatically by main.hpp.
-class OnExitCleanUp {
+class LP3_CORE_API OnExitCleanUp {
 public:
     OnExitCleanUp();
     ~OnExitCleanUp();
 };
 
 
-struct GlobalResource {
+struct LP3_CORE_API GlobalResource {
 	virtual ~GlobalResource() {}
 };
 
+LP3_CORE_API
 void on_exit_clean_up(GlobalResource *);
 
 // --------------------------------------------------------------------

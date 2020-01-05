@@ -18,9 +18,7 @@ namespace lp3 { namespace core {
 //     to std::abort simply to make testing and other forms of error handling
 //     easier.
 // ----------------------------------------------------------------------------
-class
-LP3_CORE_API
-Exception
+class LP3_CORE_API Exception
 :   public virtual std::exception
 {
 public:

@@ -47,8 +47,7 @@ namespace lp3::sdl {
 //      Create one of these in your main method to initialize the SDL.
 //      The destructor will deinitialize the SDL.
 // ----------------------------------------------------------------------------
-LP3_CORE_API
-struct SDL2 {
+struct LP3_CORE_API SDL2 {
     SDL2(Uint32 flags);
     ~SDL2();
 };
@@ -127,14 +126,12 @@ using GLContext = SdlAutoDeletedResource<SDL_GLContext, SDL_GL_DeleteContext>;
 // NOTE: Currently this breaks the default behavior of SDL_assert afterwards
 //       (asserts causes failures but it won't trigger a breakpoint) even
 //       though it looks correct according to the docs, so only use it in tests.
-LP3_CORE_API
-class SdlAssertCalled : public lp3::core::Exception {
+class LP3_CORE_API SdlAssertCalled : public lp3::core::Exception {
 public:
 	SdlAssertCalled();
 };
 
-LP3_CORE_API
-class SdlAssertToExceptionConverter {
+class LP3_CORE_API SdlAssertToExceptionConverter {
 public:
 	SdlAssertToExceptionConverter();
 
@@ -144,7 +141,7 @@ private:
     SDL_AssertionHandler old_handler;
 };
 
-LP3_CORE_API
+
 inline void close_rwops(SDL_RWops * ops) {
 	SDL_assert(nullptr != ops);
 	auto result = ops->close(ops);
@@ -167,8 +164,7 @@ inline void close_rwops(SDL_RWops * ops) {
 //      lp3::core::MediaManager's `load` and `save` methods return instances
 //      of RWops.
 // ----------------------------------------------------------------------------
-LP3_CORE_API
-class RWops {
+class LP3_CORE_API RWops {
 public:
 	RWops();
 

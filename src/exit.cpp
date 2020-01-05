@@ -1,3 +1,4 @@
+#define LP3_CORE_API_CREATE
 #include <lp3/core/exit.hpp>
 #include <list>
 #include <mutex>
@@ -47,11 +48,13 @@ namespace {
     } aux_cleaner;
 }
 
+LP3_CORE_API
 OnExitCleanUp::OnExitCleanUp() {
     LP3_ASSERT(!initialized);
     initialized = true;
 }
 
+LP3_CORE_API
 OnExitCleanUp::~OnExitCleanUp() {
     // Unlike the above use case, no client code should be try to call
     // this twice.
@@ -60,6 +63,7 @@ OnExitCleanUp::~OnExitCleanUp() {
     clean_up();
 }
 
+LP3_CORE_API
 void on_exit_clean_up(GlobalResource * gr) {
 	static std::mutex _mutex;
 	std::lock_guard<std::mutex> guard(_mutex);
