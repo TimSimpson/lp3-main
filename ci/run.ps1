@@ -1,3 +1,7 @@
+# I was all set to blast off into the future and use PowerShell instead of batch
+# files for Windows, but for some reason the call to `Start-Process` below
+# hangs when `conan build` is called. This also runs far slower than the
+# corresponding batch file, and is more verbose.
 param(
     [Parameter(Mandatory=$True, Position=0, ValueFromPipeline=$false)]
     [System.String]
