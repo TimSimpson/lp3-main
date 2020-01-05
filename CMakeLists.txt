@@ -18,8 +18,11 @@ endif()
 find_package(Boost 1.71.0 REQUIRED)
 find_package(Catch2 REQUIRED)
 find_package(gsl_microsoft REQUIRED)
-find_package(sdl2 2.0.9 MODULE REQUIRED)
-find_package(sdl2_image 2.0.5 REQUIRED)
+
+if (NOT "${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
+    find_package(sdl2 2.0.9 MODULE REQUIRED)
+    find_package(sdl2_image 2.0.5 REQUIRED)
+endif()
 
 add_library(lp3_core
     ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/le.hpp
@@ -76,11 +79,28 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 target_link_libraries(lp3_core
-    PUBLIC gsl_microsoft::gsl_microsoft
-           Boost::boost
-           sdl2::sdl2
-           sdl2_image::sdl2_image
+    PUBLIC Boost::boost
+           gsl_microsoft::gsl_microsoft
 )
+
+if (NOT "${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
+    target_link_libraries(lp3_core
+        PUBLIC sdl2::sdl2
+               sdl2_image::sdl2_image
+    )
+else()
+    target_compile_options(lp3_core PUBLIC
+        "SHELL:-s USE_SDL=2"
+        "SHELL:-s USE_SDL_IMAGE=2"
+        "SHELL:-s SDL2_IMAGE_FORMATS=[\"png\",\"bmp\"]"
+    )
+    target_link_options(lp3_core PUBLIC
+        "SHELL:-s USE_SDL=2"
+        "SHELL:-s USE_SDL_IMAGE=2"
+        "SHELL:-s SDL2_IMAGE_FORMATS=[\"png\",\"bmp\"]"
+    )
+endif()
+
 
 if ("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
     target_sources(lp3_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/js/platform.cpp)
@@ -88,22 +108,23 @@ else()
     target_sources(lp3_core PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/platform.cpp)
 endif()
 
-target_precompile_headers(lp3_core
-    PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/le.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/assert.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/casts.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/log.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/sdl.hpp
+# Unfortunately, CMake's precompiled headers aren't working in Emscripten yet.
+if (NOT "${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
+    target_precompile_headers(lp3_core
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/le.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/assert.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/casts.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/log.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/sdl.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/config.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/Exception.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/exit.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/utils.hpp
-)
-
-
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/config.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/Exception.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/exit.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/core/utils.hpp
+    )
+endif()
 
 
 # *********************************************************************
@@ -171,10 +192,21 @@ if (LP3_CORE_FULL)
     target_link_libraries(media_tests lp3_core Catch2::Catch2)
     add_test(media_tests media_tests)
 
-    add_executable(Sdl2Simple ${CMAKE_CURRENT_SOURCE_DIR}/demos/Sdl2Simple.cpp)
+    add_executable(Sdl2Simple WIN32
+                   ${CMAKE_CURRENT_SOURCE_DIR}/demos/Sdl2Simple.cpp)
     target_link_libraries(Sdl2Simple lp3_core)
+    if ("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
+        set_target_properties(Sdl2Simple PROPERTIES
+            SUFFIX ".html"
+            LINK_FLAGS "--emrun"
+        )
+        target_link_options(Sdl2Simple PRIVATE
+            "SHELL:--preload-file ${CMAKE_CURRENT_SOURCE_DIR}/ci/media@/"
+        )
+    endif()
 
-    add_executable(MultipleWindows ${CMAKE_CURRENT_SOURCE_DIR}/demos/MultipleWindows.cpp)
+    add_executable(MultipleWindows WIN32
+                   ${CMAKE_CURRENT_SOURCE_DIR}/demos/MultipleWindows.cpp)
     target_link_libraries(MultipleWindows lp3_core)
 
     if (LP3_SETUP_FOLDERS)

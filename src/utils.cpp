@@ -50,7 +50,7 @@ std::optional<std::string> get_env_var(const gsl::cstring_span<> & name) {
     LP3_ASSERT(0 == result); // Error calling _dupenv_s
     std::unique_ptr<char> delete_env_var(env_var_value);
 
-#elif defined(LP3_COMPILE_TARGET_EMSCRIPTEN)
+#elif defined(__EMSCRIPTEN__)
     const char * env_var_value = nullptr;
 #else
     const char * const env_var_value = getenv(name.data());

@@ -18,7 +18,6 @@ sdl2_image:xpm=False
 sdl2_image:xv=False
 sdl2_image:jpg=False
 sdl2_image:tif=False
-sdl2_image:png=False
 sdl2_image:webp=False
 
 [build_requires]

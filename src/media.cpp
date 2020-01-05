@@ -31,16 +31,16 @@ MediaManager::MediaManager(const std::string & _base_directory)
 :   base_directory(_base_directory)
 {}
 
-#ifdef LP3_COMPILE_TARGET_PC
+#if defined(__EMSCRIPTEN__)
+
+MediaManager::MediaManager()
+:   base_directory("")
+{}
+
+#elif defined(LP3_COMPILE_TARGET_PC)
 
 MediaManager::MediaManager()
 :   base_directory(get_env_media_path())
-{}
-
-#elif defined(LP3_COMPILE_TARGET_EMSCRIPTEN)
-
-MediaManager::MediaManager()
-:   base_directory("/")
 {}
 
 #elif defined(LP3_COMPILE_TARGET_DREAMCAST)

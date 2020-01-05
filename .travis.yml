@@ -1,6 +1,6 @@
 language: cpp
 
-clang: &clang
+clang-linux: &clang-linux
   os: linux
   dist: xenial
   python: "3.7"
@@ -15,16 +15,39 @@ clang: &clang
         - libstdc++-8-dev
         - python3-pip
 
+emscripten: &emscripten
+  os: linux
+  dist: xenial
+  python: "3.7"
+  compiler: clang
+  addons:
+    apt:
+      packages:
+        - python3-pip
+
+osx: &osx
+   os: osx
+   language: generic
+   osx_image: xcode11.3
+
 matrix:
   include:
-    - name: "Clang 8.0 Release"
-      <<: *clang
+    - name: "Linux Clang 8.0 Release"
+      <<: *clang-linux
       env:
         - PROFILE=clang-8-r-static
-    - name: "Clang 8.0 Debug"
-      <<: *clang
+    - name: "Linux Clang 8.0 Debug"
+      <<: *clang-linux
       env:
         - PROFILE=clang-8-d-shared
+    - name: "Emscripten WASM Release"
+      <<: *emscripten
+      env:
+        - PROFILE=emscripten-w-r
+    - name: "Emscripten Javascript Debug"
+      <<: *emscripten
+      env:
+        - PROFILE=emscripten-js-d
 
 install:
   - ./ci/travis/install.sh

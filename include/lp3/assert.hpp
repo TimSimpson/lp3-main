@@ -13,7 +13,13 @@
 #include "core/config.hpp"
 #include "core/Exception.hpp"
 #define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
+
+#ifndef __EMSCRIPTEN__
+    #include <SDL2/SDL.h>
+#else
+    #include <SDL.h>
+#endif
+
 
 // SDL_assert *almost* did what I wanted, but oops, it's crappy old C code
 // so there's no way to optionally raise an exception, which is what you
