@@ -200,6 +200,9 @@ if (LP3_CORE_FULL)
             SUFFIX ".html"
             LINK_FLAGS "--emrun"
         )
+        target_link_options(Sdl2Simple PRIVATE
+            "SHELL:--preload-file ${CMAKE_CURRENT_SOURCE_DIR}/ci/media@/"
+        )
     endif()
 
     add_executable(MultipleWindows WIN32
