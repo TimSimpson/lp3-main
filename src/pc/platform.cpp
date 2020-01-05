@@ -1,3 +1,4 @@
+#define LP3_CORE_API_CREATE
 #include <lp3/core/utils.hpp>
 #include <boost/lexical_cast.hpp>
 #ifdef LP3_COMPILE_TARGET_WINDOWS
@@ -16,6 +17,7 @@ namespace {
     }
 }
 
+LP3_CORE_API
 PlatformLoop::PlatformLoop()
 :   arguments()
 {
@@ -38,6 +40,7 @@ PlatformLoop::PlatformLoop()
     #endif
 }
 
+LP3_CORE_API
 PlatformLoop::PlatformLoop(int argc, char ** argv)
 :   arguments()
 {
@@ -46,10 +49,12 @@ PlatformLoop::PlatformLoop(int argc, char ** argv)
     }
 }
 
+LP3_CORE_API
 std::vector<std::string> PlatformLoop::command_line_args() const {
     return arguments;
 }
 
+LP3_CORE_API
 int PlatformLoop::run(std::function<bool()> iterate) {
     if (iterate) {
         const auto count = loop_count();

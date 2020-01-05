@@ -54,18 +54,23 @@ target_compile_features(lp3_core
     cxx_std_17
 )
 
-if(BUILD_SHARED_LIBS)
-    target_compile_definitions(lp3_core
-        PUBLIC LP3_CORE_API_DYNAMIC
-    )
-endif()
-
 target_include_directories(lp3_core
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
     PRIVATE
         src)
+
+# This is built as a "shared library" in sarcastic air quotes. It's only
+# made that way to make linking faster, and relies on consumers using the same
+# version of the runtime it was built with. IIRC this used to not be that big
+# of a problem with VS, but now it is, thus the disabled warnings.
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(lp3_core PUBLIC LP3_CORE_API_DYNAMIC)
+endif()
+if (MSVC)
+    target_compile_options(lp3_core PRIVATE /wd4251 /wd4275)
+endif()
 
 target_link_libraries(lp3_core
     PUBLIC gsl_microsoft::gsl_microsoft
