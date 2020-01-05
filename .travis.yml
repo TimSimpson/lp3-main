@@ -42,18 +42,12 @@ matrix:
         - PROFILE=clang-8-d-shared
     - name: "Emscripten WASM Release"
       <<: *emscripten
+      env:
         - PROFILE=emscripten-w-r
     - name: "Emscripten Javascript Debug"
       <<: *emscripten
+      env:
         - PROFILE=emscripten-js-d
-    # - name: "OSX Release"
-    #   <<: *osx
-    #   env:
-    #     - PROFILE=osx-8-r-static
-    # - name: "OSX Debug"
-    #   <<: *osx
-    #   env:
-    #     - PROFILE=osx-8-d-shared
 
 install:
   - ./ci/travis/install.sh
