@@ -2,7 +2,6 @@ include(clang-8)
 
 [settings]
 build_type=Debug
-compiler.runtime=MDd
 
 [options]
 *:shared=True
