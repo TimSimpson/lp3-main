@@ -40,8 +40,8 @@ int _main(core::PlatformLoop & loop) {
 
     LP3_LOG_DEBUG("Loading texture...");
 
-    sdl::RWops bmp_file = media.load("Engine/Gfx/Earth.bmp");
-    sdl::Surface bitmap = SDL_LoadBMP_RW(bmp_file, 0);
+    sdl::RWops png_file = media.load("core/Earth.png");
+    sdl::Surface bitmap = IMG_LoadTyped_RW(png_file, 0, "PNG");
 
     // Here's an alternative way to load the bitmap:
     // const auto bmp_file = media.path("Engine/Gfx/Earth.bmp");
