@@ -191,6 +191,12 @@ if (LP3_CORE_FULL)
     add_executable(media_tests ${CMAKE_CURRENT_SOURCE_DIR}/tests/media_tests.cpp)
     target_link_libraries(media_tests lp3_core Catch2::Catch2)
     add_test(media_tests media_tests)
+    if ("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
+        # Only bother embedding the one file.
+        target_link_options(media_tests PRIVATE
+            "SHELL:--embed-file ${CMAKE_CURRENT_SOURCE_DIR}/ci/media/core/story.txt@/core/story.txt"
+        )
+    endif()
 
     add_executable(Sdl2Simple WIN32
                    ${CMAKE_CURRENT_SOURCE_DIR}/demos/Sdl2Simple.cpp)
