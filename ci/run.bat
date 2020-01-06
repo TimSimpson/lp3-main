@@ -22,5 +22,6 @@ call conan install %root_dir% -pr=%profile_path% --build missing
 if not %ERRORLEVEL%==0 (
     exit /b %ERRORLEVEL%
 )
+set LP3_ROOT_PATH=%root_dir%\ci\media
 call conan build %root_dir%
 exit /b %ERRORLEVEL%
