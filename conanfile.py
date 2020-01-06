@@ -59,7 +59,8 @@ class Lp3Core(conans.ConanFile):
             "CMAKE_FIND_PACKAGE_PREFER_CONFIG":"TRUE",
         })
         cmake.build()
-        if self.settings.os != "Emscripten":
+        # If SDL2 is shared, we won't be able to find it in most cases.
+        if self.settings.os != "Emscripten" and not self.options['shared']:
             cmake.test()
 
     def package(self):
