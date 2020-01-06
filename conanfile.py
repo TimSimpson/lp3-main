@@ -59,6 +59,8 @@ class Lp3Core(conans.ConanFile):
             "CMAKE_FIND_PACKAGE_PREFER_CONFIG":"TRUE",
         })
         cmake.build()
+        if self.settings.os != "Emscripten":
+            cmake.test()
 
     def package(self):
         self.copy("*.hpp", dst="include", src="src")

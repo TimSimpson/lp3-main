@@ -19,4 +19,4 @@ fi
 mkdir -p "${build_dir}"
 cd "${build_dir}"
 conan install "${root_dir}" -pr="${profile_path}" --build missing
-conan build "${root_dir}"
+LP3_ROOT_PATH="${root_dir}/ci/media" conan build "${root_dir}"

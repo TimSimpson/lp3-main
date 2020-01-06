@@ -6,6 +6,8 @@ project(Lp3_Core CXX)
 cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
 include(CMakePackageConfigHelpers)
 
+enable_testing()
+
 include("${CMAKE_BINARY_DIR}/conan_paths.cmake"
         OPTIONAL
         RESULT_VARIABLE using_conan)
