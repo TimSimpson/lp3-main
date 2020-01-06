@@ -36,10 +36,10 @@ matrix:
       <<: *clang-linux
       env:
         - PROFILE=clang-8-r-static
-    - name: "Linux Clang 8.0 Debug"
+    - name: "Linux Clang 8.0 Debug Static"
       <<: *clang-linux
       env:
-        - PROFILE=clang-8-d-shared
+        - PROFILE=clang-8-d-static
     - name: "Emscripten WASM Release"
       <<: *emscripten
       env:
