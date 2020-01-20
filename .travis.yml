@@ -30,6 +30,12 @@ osx: &osx
    language: generic
    osx_image: xcode11.3
 
+install:
+  - ./ci/travis/install.sh
+
+script:
+  - ./ci/travis/run.sh
+
 matrix:
   include:
     - name: "Linux Clang 8.0 Release"
@@ -49,8 +55,7 @@ matrix:
       env:
         - PROFILE=emscripten-js-d
 
-install:
-  - ./ci/travis/install.sh
-
-script:
-  - ./ci/travis/run.sh
+    - name: "Docs"
+      <<: *emscripten
+      script:
+        - ./ci/travis/docs.sh
