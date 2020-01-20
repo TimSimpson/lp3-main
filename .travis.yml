@@ -60,6 +60,7 @@ matrix:
       addons:
         apt:
           packages:
+            - python3-pip
             - pandoc
       script:
         - ./ci/travis/docs.sh
