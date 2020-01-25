@@ -1,0 +1,85 @@
+~dumpfile "../README.md"
+
+Build Info and Options
+----------------------
+
+If you're using CMake, just include core directory's CMakeLists.txt as a subdirectory.
+
+To consume this library from CMake, install it first (using either Cget or Conan with the ``cmake_paths`` generator) and then add ``find_package(Lp3_Core)`` to your CMake file to bring the import library ``lp3::core`` into your script.
+
+CMake Options
+~~~~~~~~~~~~~
+
+These options can be set with CMake and are primarily useful if using this as a subdirectory.
+
+LP3_CORE_FULL
+    If false, only the main library gets built. If true, demos and tests are built as well.
+    This option is set to false when the project is added as a subdirectory, otherwise it is true.
+
+
+LP3_SETUP_FOLDERS
+    If true, this adds the FOLDER property of "core". Only useful for sorting things in Visual Studio.
+
+
+Build Definitions
+~~~~~~~~~~~~~~~~~
+
+The following build definitions are potentially useful
+
+LP3_CORE_API_DYNAMIC
+    If set, forces library functions to be defined as `__declspec(dllexport)` on Windows. Is set automatically when BUILD_SHARED_LIBS is set.
+
+LP3_COMPILE_LOG_DISABLE
+    If set, disables logging even in debug mode. Good if you don't wish to use the built-in logging utilities.
+
+
+~dumpfile "../include/lp3/main.hpp" section = "=" end_before = "// ~end-doc summary"
+
+~dumpfile "../include/lp3/le.hpp" section = "=" end_before = "// ~end-doc summary"
+
+~dumpfile "../include/lp3/assert.hpp" section = "=" end_before = "// ~end-doc summary"
+
+~dumpfile "../include/lp3/log.hpp" section = "=" end_before = "// ~end-doc summary"
+
+~dumpfile "../include/lp3/sdl.hpp" section = "=" end_before = "// ~end-doc summary"
+
+Reference
+---------
+
+::lp3
+~~~~~
+
+The following components live in the ``::lp3`` namespace (unless they're macros).
+They can be brought in by including ``lp3/core.hpp``.
+
+~dumpfile "../include/lp3/main.hpp" section = "-" start_after = "// ~end-doc summary"
+
+~dumpfile "../include/lp3/le.hpp" section = "-" start_after = "// ~end-doc summary"
+
+~dumpfile "../include/lp3/assert.hpp" section = "-" start_after = "// ~end-doc summary"
+
+~dumpfile "../include/lp3/casts.hpp" section = "-"
+
+
+::lp3::core
+~~~~~~~~~~~
+The following components live in the ``::lp3::core`` namespace.
+They can be brought in by including ``lp3/core.hpp``.
+
+~dumpfile "../include/lp3/log.hpp" section = "-" start_after = "// ~end-doc summary"
+
+~dumpfile "../include/lp3/core/utils.hpp" section = "-"
+
+~dumpfile "../include/lp3/core/exit.hpp" section = "-"
+~dumpfile "../demos/ExitDemo.cpp" section = "~"
+
+~dumpfile "../include/lp3/core/Exception.hpp" section = "-"
+
+
+::lp3::sdl
+~~~~~~~~~~
+
+The following components live in the ``::lp3::sdl`` namespace.
+They can be brought in by including ``lp3/sdl.hpp``.
+
+~dumpfile "../include/lp3/sdl.hpp" section = "-" start_after = "// ~end-doc summary"
