@@ -10,6 +10,6 @@ readonly scripts_dir="$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")"
 
 export PATH="$(pwd)/venv/bin:${PATH}"
 
-pip3 install mrst==0.6.0
+pip3 install mrst==0.6.1
 pip3 install Sphinx==2.3.1
 mrst --source docs --output output/doc
