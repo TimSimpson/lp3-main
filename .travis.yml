@@ -56,7 +56,10 @@ matrix:
         - PROFILE=emscripten-js-d
 
     - name: "Docs"
-      <<: *emscripten
+      language: python
+      os: linux
+      dist: xenial
+      python: "3.7"
       addons:
         apt:
           packages:
