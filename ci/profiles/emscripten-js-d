@@ -1,5 +1,0 @@
-include(emscripten)
-
-[settings]
-arch=asm.js
-build_type=Debug
