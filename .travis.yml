@@ -31,10 +31,11 @@ osx: &osx
    osx_image: xcode11.3
 
 install:
-  - ./ci/travis/install.sh
+  - git submodule update --init
+  - ./ci/cpp/conan/travis/install.sh
 
 script:
-  - ./ci/travis/run.sh
+  - ./ci/cpp/conan/travis/run.sh
 
 matrix:
   include:
@@ -66,4 +67,4 @@ matrix:
             - python3-pip
             - pandoc
       script:
-        - ./ci/travis/docs.sh
+        - ./ci/cpp/conan/travis/docs.sh
