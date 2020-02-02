@@ -31,6 +31,10 @@ struct RegisterData {
     RegisterData(const char * name, const char * desc) {
         data.get()[std::string(name)] = Data{name, desc};
     }
+
+    ~RegisterData() {
+        std::cout << "Register data is being deleted...\n";
+    }
 };
 
 RegisterData data_1("Tim", "Author");

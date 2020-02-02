@@ -19,8 +19,8 @@ namespace {
         return calls;
     }
 
-    bool initialized = false;
-    bool has_shut_down = false;
+    static bool initialized = false;
+    static bool has_shut_down = false;
 
     void clean_up() {
         if (get_globals() == nullptr) {
@@ -58,7 +58,7 @@ OnExitCleanUp::~OnExitCleanUp() {
     // Unlike the above use case, no client code should be try to call
     // this twice.
     if (has_shut_down) {
-        throw std::logic_error("Already shut down.");
+        std::abort();
     }
     has_shut_down = true;
     clean_up();

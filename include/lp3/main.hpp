@@ -64,6 +64,7 @@
 // Non-Windows ---------------------------------------------------------------
 	#define LP3_MAIN(main_function) \
 		int main(int argc, char* argv[]) { \
+			lp3::main::OnExitCleanUp clean_up; \
 			lp3::main::PlatformLoop loop(argc, argv); \
 			return main_function(loop); \
 		}
@@ -73,7 +74,7 @@
 	// Just use "WIN32" flag in CMake
 	// #pragma comment( linker, "/subsystem:windows" )
 
-	#if  defined(LP3_COMPILE_WITH_DEBUGGING)
+	#if _DEBUG
 		#define LP3_MAIN(main_function) \
 			int WinMain(HINSTANCE, HINSTANCE, LPTSTR, int) { \
 				_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);	\

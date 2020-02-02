@@ -1,10 +1,38 @@
-# LP3 Core
+# lp3-main
 
-Very basic utility library that handles the following:
+Very basic library which helps writing apps with a "platform loop."
 
-* A class to abstract the platform loop via a passed in std::function (useful for handling differences with Emscripten).
-* Basic RAII helper classes to deal with SDL2 resources.
-* Establishes a rudimentary logging system compatible with SDL2's log system and [the Squirrel Console](https://github.com/TimSimpson/SquirrelConsole). It uses boost::format to support a printf syntax and completely disappears outside of debug builds.
-* Has code for raising errors or calling std::abort if exceptions are disabled, and creates a base exception class for other libraries to extend.
-* Defines some compiler symbols to detect what platform code is running on (see le.hpp) (this is the descendant of code I wrote 15 years ago and should probably go away).
-* `GlobalVar`, a class which avoids false negatives with Visual C++'s leak detector.
+Here's an example:
+
+```cpp
+#include <lp3/main.hpp>  // Only ever include this once
+// include <lp3/main/utils.hpp> for some of the other functionality
+
+int _main(lp3::main::PlatformLoop & loop) {
+    // Create all the important systems of your game or app (for argument's
+    // sake pretend this initialization code is complex):
+    MyGrossAppState state();
+
+    // now, run the app:
+    const auto result = loop.run([&]() {
+        // This gets called each frame until false is returned.
+        bool keep_running = state.run();
+        return keep_running;
+    });
+
+    return result;
+}
+
+LP3_MAIN(_main)
+```
+
+As seen, "PlatformLoop" is created by the dangerous and cool "LP3_MAIN" macro and passed into the function you write. You then give PlatformLoop a function to "run" repeatedly in a loop.
+
+Platform Specific Behaviors:
+
+* In Emscripten, `PlatformLoop::run` calls `emscripten_set_main_loop`.
+* In Windows, the `LP3_MAIN` macro sandwhiches the main method you give it between calls to `_CrtSetReportMode` and `_CrtDumpMemoryLeaks`.
+
+`lp3/main/utils.hpp` also has some stuff to let you create global variables in a way that avoids false negatives with some leak detectors.
+
+
