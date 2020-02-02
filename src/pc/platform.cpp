@@ -30,6 +30,11 @@ namespace {
             return std::nullopt;
         }
         std::unique_ptr<char> delete_env_var(env_var_value);
+        if (env_var_value) {
+            return std::string{env_var_value};
+        } else {
+            return std::nullopt;
+        }
     }
 
     std::optional<std::string> write_wchat_t_to_string(wchar_t const * src)
@@ -39,12 +44,11 @@ namespace {
         const std::size_t total_length = wcslen(src);
         result.reserve(total_length);
 
-        // TODO: disable 4996 on MSVC?
-        const std::size_t converted_count
-            = wcstombs(result.data(), src, total_length);
-        // Return false if could not convert wide character string to classic
-        // char string.
-        if (converted_count != total_length) {
+        std::size_t converted_count;
+        const auto errors = wcstombs_s(
+            &converted_count, result.data(), total_length, src, total_length);
+
+        if (errors != 0 || converted_count != total_length) {
             return std::nullopt;
         } else {
             return result;

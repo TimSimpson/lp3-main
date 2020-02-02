@@ -105,10 +105,10 @@ if (NOT is_child)
 endif()
 
 if (LP3_MAIN_FULL)
-    add_executable(ExitDemo ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
+    add_executable(ExitDemo WIN32 ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
     target_link_libraries(ExitDemo lp3_main)
 
-    add_executable(MainDemo ${CMAKE_CURRENT_SOURCE_DIR}/demos/MainDemo.cpp)
+    add_executable(MainDemo WIN32 ${CMAKE_CURRENT_SOURCE_DIR}/demos/MainDemo.cpp)
     target_link_libraries(MainDemo lp3_main)
 
     if (LP3_SETUP_FOLDERS)
