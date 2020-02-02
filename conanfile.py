@@ -1,6 +1,6 @@
 import os.path
 
-importge conans
+import conans
 
 
 class Lp3Main(conans.ConanFile):
