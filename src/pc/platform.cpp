@@ -1,6 +1,7 @@
 #include <lp3/main/utils.hpp>
 
 #include <optional>
+#include <stdexcept>
 #ifdef _WIN32
     #include <windows.h>
 #endif
