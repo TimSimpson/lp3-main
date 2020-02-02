@@ -3,6 +3,7 @@ import conans
 class TestPackage(conans.ConanFile):
 
     generators = "cmake_paths"
+    settings = "os", "compiler", "build_type", "arch"
 
     def build(self):
         cmake = conans.CMake(self)
@@ -10,4 +11,5 @@ class TestPackage(conans.ConanFile):
         cmake.build()
 
     def test(self):
-        self.run(f"{self.build_folder}/main_test", run_environment=True)
+        if self.settings.os != "Emscripten":
+            self.run(f"{self.build_folder}/main_test", run_environment=True)
