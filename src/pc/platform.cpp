@@ -25,7 +25,7 @@ namespace {
     std::optional<std::string> get_env_var(const char * name) {
         char * env_var_value;
         std::size_t length;
-        auto result = _dupenv_s(&env_var_value, &length, name.data());
+        auto result = _dupenv_s(&env_var_value, &length, name);
         if (0 != result) {
             return std::nullopt;
         }
@@ -41,7 +41,7 @@ namespace {
 
         // TODO: disable 4996 on MSVC?
         const std::size_t converted_count
-            = wcstombs(result.data(), original, total_length);
+            = wcstombs(result.data(), src, total_length);
         // Return false if could not convert wide character string to classic
         // char string.
         if (converted_count != total_length) {
