@@ -1,45 +1,102 @@
-#include <lp3/core/utils.hpp>
-#include <boost/lexical_cast.hpp>
-#ifdef LP3_COMPILE_TARGET_WINDOWS
+#include <lp3/main/utils.hpp>
+
+#ifdef _WIN32
     #include <windows.h>
 #endif
 
-namespace lp3::core {
+
+namespace {
+
+#if !defined(_WIN32)
+
+    std::optional<std::string> get_env_var(const char * name) {
+        const char * const env_var_value = getenv(name);
+        if (env_var_value) {
+            return std::string{env_var_value};
+        } else {
+            return std::nullopt;
+        }
+    }
+
+#else
+
+    std::optional<std::string> get_env_var(const char * name) {
+        char * env_var_value;
+        std::size_t length;
+        auto result = _dupenv_s(&env_var_value, &length, name.data());
+        if (0 != result) {
+            return std::nullopt;
+        }
+        std::unique_ptr<char> delete_env_var(env_var_value);
+    }
+
+    std::optional<std::string> write_wchat_t_to_string(wchar_t const * src)
+        noexcept
+    {
+        std::string result;
+        const std::size_t total_length = wcslen(src);
+        result.reserve(total_length);
+
+        // TODO: disable 4996 on MSVC?
+        const std::size_t converted_count
+            = wcstombs(result.data(), original, total_length);
+        // Return false if could not convert wide character string to classic
+        // char string.
+        if (converted_count != total_length) {
+            return std::nullopt;
+        } else {
+            return result;
+        }
+    }
+
+#endif
+
+}
+
+
+namespace lp3::main {
 
 namespace {
     std::optional<int> loop_count() {
         auto value = get_env_var("LP3_LOOP_COUNT");
-        if (!value)
+        if (!value) {
             return std::nullopt;
-        else
-            return boost::lexical_cast<int>(*value);
+        }
+        else {
+            try {
+                return std::stoi(*value);
+            } catch(const std::logic_error &) {
+                return std::nullopt;
+            }
+        }
     }
 }
 
-LP3_CORE_API
+LP3_MAIN_API
 PlatformLoop::PlatformLoop()
 :   arguments()
 {
-    #if defined(LP3_COMPILE_TARGET_WINDOWS)
+    #if defined(_WIN32)
         int argLength;
-        LPWSTR * windowsString = ::CommandLineToArgvW(GetCommandLineW(),
-                                                      &argLength);
-        if (nullptr == windowsString)
+        LPWSTR * windows_string = ::CommandLineToArgvW(
+            GetCommandLineW(), &argLength
+        );
+        if (nullptr == windows_string)
         {
-            LP3_LOG_ERROR("Error converting command line arguments.");
-			LP3_THROW2(lp3::core::Exception,
-				       "Error converting command line arguments.");
+            return;
         }
         for(int i = 0; i < argLength; i ++)
         {
-            WCharToCharConverter original(windowsString[i]);
-            this->arguments.push_back(original.GetCharPtr());
+            const auto new_string = write_wchat_t_to_string(windows_string[i]);
+            if (new_string) {
+                this->arguments.push_back(*new_string);
+            }
         }
-        LocalFree(windowsString);
+        LocalFree(windows_string);
     #endif
 }
 
-LP3_CORE_API
+LP3_MAIN_API
 PlatformLoop::PlatformLoop(int argc, char ** argv)
 :   arguments()
 {
@@ -48,12 +105,12 @@ PlatformLoop::PlatformLoop(int argc, char ** argv)
     }
 }
 
-LP3_CORE_API
+LP3_MAIN_API
 std::vector<std::string> PlatformLoop::command_line_args() const {
     return arguments;
 }
 
-LP3_CORE_API
+LP3_MAIN_API
 int PlatformLoop::run(std::function<bool()> iterate) {
     if (iterate) {
         const auto count = loop_count();

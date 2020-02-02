@@ -16,10 +16,7 @@
 #include <map>
 #include <string>
 
-#include <lp3/core.hpp>
 #include <lp3/main.hpp>
-
-namespace core = lp3::core;
 
 struct Data {
     const char * name;
@@ -27,7 +24,7 @@ struct Data {
 };
 
 namespace {
-    core::GlobalVar<std::map<std::string, Data>> data;
+    lp3::main::GlobalVar<std::map<std::string, Data>> data;
 }
 
 struct RegisterData {
@@ -39,17 +36,17 @@ struct RegisterData {
 RegisterData data_1("Tim", "Author");
 RegisterData data_2("C++", "Language");
 
-int _main(core::PlatformLoop &) {
-    lp3::core::LogSystem log;
-
-    LP3_LOG_DEBUG("Let's play with crazy global data.");
+int _main(lp3::main::PlatformLoop &) {
+    std::cout << "Let's play with crazy global data.\n";
 
 	for (auto & e : data.get()) {
-		LP3_ASSERT(e.first == e.second.name);
-		LP3_LOG_DEBUG("%s - %s", e.first, e.second.desc);
+		if (e.first != e.second.name) {
+            std::cerr << "Error! :";
+        }
+        std::cout << e.first << " - " << e.second.desc << "\n";
 	}
 
-    LP3_LOG_DEBUG("Good bye.");
+    std::cout << "Good bye.\n";
 	return 0;
 }
 

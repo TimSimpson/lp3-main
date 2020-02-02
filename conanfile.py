@@ -3,36 +3,21 @@ import os.path
 import conans
 
 
-class Lp3Core(conans.ConanFile):
-    name = "Lp3-Core"
+class Lp3Main(conans.ConanFile):
+    name = "Lp3-Main"
     version = "1.0.1"
     license = "Zlib"
     author = "Tim Simpson"
-    url = "https://github.com/TimSimpson/Lp3-Core"
+    url = "https://github.com/TimSimpson/Lp3-Main"
     description = "simple game app helper library"
 
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = {"shared": False}
 
-    requires = (
-        "boost/1.71.0@conan/stable",
-        "gsl_microsoft/2.0.0@bincrafters/stable",
-        "zlib/1.2.11@conan/stable",
-    )
-
-    sdl2_requires = (
-        "sdl2/2.0.9@bincrafters/stable",
-        "sdl2_image/2.0.5@bincrafters/stable",
-    )
-
-    def requirements(self):
-        if self.settings.os != "Emscripten":
-            for r in self.sdl2_requires:
-                self.requires.add(r)
+    requires = tuple()
 
     build_requires = (
-        "glm/0.9.8.5@g-truc/stable",
         "catch2/2.4.1@bincrafters/stable"
     )
     generators = "cmake_paths", "cmake_find_package"

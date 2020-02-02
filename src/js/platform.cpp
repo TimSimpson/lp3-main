@@ -4,9 +4,9 @@
 
 #include <boost/scope_exit.hpp>
 #include <SDL.h>
-#include <lp3/core/utils.hpp>
+#include <lp3/main/utils.hpp>
 
-namespace lp3::core {
+namespace lp3::main {
 
 namespace {
     static int global_instances = 0;

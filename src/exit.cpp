@@ -1,12 +1,10 @@
-#include <lp3/core/exit.hpp>
+#include <lp3/main/utils.hpp>
 #include <list>
 #include <mutex>
 #include <thread>
-#include <gsl/gsl>
-#include <lp3/assert.hpp>
 
 
-namespace lp3::core {
+namespace lp3::main {
 
 namespace {
 
@@ -15,9 +13,9 @@ namespace {
     // Visual C++'s memory leak detector complains if a typical global variable
     // is used for a complex type, but not if we use a pointer, which coerces
     // some of the anti-patterns seen here.
-    static std::list<gsl::owner<GlobalResource *>> * & get_globals() {
-        static std::list<gsl::owner<GlobalResource *>> * calls
-			= new std::list<gsl::owner<GlobalResource *>>();
+    static std::list<GlobalResource *> * & get_globals() {
+        static std::list<GlobalResource *> * calls
+			= new std::list<GlobalResource *>();
         return calls;
     }
 
@@ -47,22 +45,26 @@ namespace {
     } aux_cleaner;
 }
 
-LP3_CORE_API
+LP3_MAIN_API
 OnExitCleanUp::OnExitCleanUp() {
-    LP3_ASSERT(!initialized);
+    if (initialized) {
+        throw std::logic_error("Already initialized.");
+    }
     initialized = true;
 }
 
-LP3_CORE_API
+LP3_MAIN_API
 OnExitCleanUp::~OnExitCleanUp() {
     // Unlike the above use case, no client code should be try to call
     // this twice.
-	LP3_ASSERT(!has_shut_down);
+    if (has_shut_down) {
+        throw std::logic_error("Already shut down.");
+    }
     has_shut_down = true;
     clean_up();
 }
 
-LP3_CORE_API
+LP3_MAIN_API
 void on_exit_clean_up(GlobalResource * gr) {
 	static std::mutex _mutex;
 	std::lock_guard<std::mutex> guard(_mutex);

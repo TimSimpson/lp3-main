@@ -7,7 +7,7 @@
 //      repeatedly).
 //
 //      Lp3::Core allows you to write a main by writing a function which
-//      accepts ``lp3::core::PlatformLoop &`` as it's sole argument and returns
+//      accepts ``lp3::main::PlatformLoop &`` as it's sole argument and returns
 //      an integer exit code that may or may not be used depending on the
 //      platform. PlatformLoop's ``run`` method can then be called with a
 //      lambda to run your game logic. Writing a lambda that captures arguments
@@ -25,7 +25,7 @@
 // ----------------------------------------------------------------------------
 // LP3_MAIN(main_function)
 // -----------------------
-//      Given a function that accepts ``lp3::core::PlatformLoop`` and
+//      Given a function that accepts ``lp3::main::PlatformLoop`` and
 //      returns ``int``, this will generate the appropriate main function
 //      for you.
 //
@@ -34,7 +34,7 @@
 //
 //      Other than easing development a bit, this also sets up the leak
 //      detector stuff for Visual C++ automatically (see
-//      ``lp3::core::GlobalVar`` for more info).
+//      ``lp3::main::GlobalVar`` for more info).
 //
 //      Note: unlike other components, this macro is only available if you
 //      explicitly include ``<lp3/main.hpp>``.
@@ -45,10 +45,8 @@
 #define FILE_LP3_MAIN_HPP
 #pragma once
 
-#include <lp3/le.hpp>
-
 // Handle VC++ leak checker stuff
-#if defined(LP3_COMPILE_TARGET_WINDOWS) && defined(LP3_COMPILE_WITH_DEBUGGING)
+#if defined(_WIN32) && defined(_DEBUG)
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
 	#pragma warning(push, 0)
@@ -58,17 +56,22 @@
 #define new DEBUG_NEW
 #endif
 
-#include "core/utils.hpp"
+#include "main/utils.hpp"
 #define SDL_MAIN_HANDLED
-#include <SDL.h>
 
-#ifdef LP3_COMPILE_TARGET_WINDOWS
-    #include <windows.h>
-#endif
 
-#if defined(LP3_COMPILE_TARGET_WINDOWS)
+#if !defined(_WIN32)
+// Non-Windows ---------------------------------------------------------------
+	#define LP3_MAIN(main_function) \
+		int main(int argc, char* argv[]) { \
+			lp3::main::PlatformLoop loop(argc, argv); \
+			return main_function(loop); \
+		}
+#else
+#include <windows.h>
 
-	#pragma comment( linker, "/subsystem:windows" )
+	// Just use "WIN32" flag in CMake
+	// #pragma comment( linker, "/subsystem:windows" )
 
 	#if  defined(LP3_COMPILE_WITH_DEBUGGING)
 		#define LP3_MAIN(main_function) \
@@ -76,8 +79,8 @@
 				_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);	\
 				int result; \
 				{	\
-					lp3::core::OnExitCleanUp clean_up; \
-					lp3::core::PlatformLoop loop; \
+					lp3::main::OnExitCleanUp clean_up; \
+					lp3::main::PlatformLoop loop; \
 					result = main_function(loop); \
 				}	\
 				if (_CrtDumpMemoryLeaks()) {	\
@@ -89,15 +92,8 @@
 	#else
 		#define LP3_MAIN(main_function) \
 			int WinMain(HINSTANCE, HINSTANCE, LPTSTR, int) { \
-				lp3::core::PlatformLoop loop;  \
+				lp3::main::PlatformLoop loop;  \
 				return main_function(loop); \
 			}
 	#endif
-#else
-// Non-Windows land
-	#define LP3_MAIN(main_function) \
-		int main(int argc, char* argv[]) { \
-			lp3::core::PlatformLoop loop(argc, argv); \
-			return main_function(loop); \
-		}
 #endif
