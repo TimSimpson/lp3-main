@@ -2,8 +2,6 @@
 ///#include <emscripten/emscripten.h>
 #include <emscripten.h>
 
-#include <boost/scope_exit.hpp>
-#include <SDL.h>
 #include <lp3/main/utils.hpp>
 
 namespace lp3::main {
@@ -12,6 +10,13 @@ namespace {
     static int global_instances = 0;
 
     static std::function<bool()> * global_iterate = nullptr;
+
+    class SetGlobalIterateToNullOnDestruct {
+    public:
+        ~SetGlobalIterateToNullOnDestruct() {
+            global_iterate = nullptr;
+        }
+    };
 
     void do_loop() {
         if (global_iterate) {
@@ -24,14 +29,18 @@ namespace {
 PlatformLoop::PlatformLoop()
 :   arguments()
 {
-    SDL_assert(global_instances < 1);
+    if (global_instances >= 1) {
+        throw std::logic_error("Platform Loop cannot be created twice.");
+    }
     ++global_instances;
 }
 
 PlatformLoop::PlatformLoop(int argc, char ** argv)
 :   arguments()
 {
-    SDL_assert(global_instances < 1);
+    if (global_instances >= 1) {
+        throw std::logic_error("Platform Loop cannot be created twice.");
+    }
     ++global_instances;
 
     for (int i = 0; i < argc; i++) {
@@ -44,14 +53,11 @@ std::vector<std::string> PlatformLoop::command_line_args() const {
 }
 
 int PlatformLoop::run(std::function<bool()> iterate) {
-    BOOST_SCOPE_EXIT(void) {
-        global_iterate = nullptr;
-    } BOOST_SCOPE_EXIT_END
+    SetGlobalIterateToNullOnDestruct set_it;
     if (iterate) {
         global_iterate = &iterate;
     }
     emscripten_set_main_loop(do_loop, 0, 1);
-
 
     return 0;
 }
