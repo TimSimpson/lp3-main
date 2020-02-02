@@ -68,3 +68,8 @@ matrix:
             - pandoc
       script:
         - ./ci/cpp/conan/travis/docs.sh
+
+env:
+  global:
+    - CONAN_LOGIN_USERNAME=TimSimpson
+    - secure: hsftGSxA4xm2sZI+xkUupaeDca8pG2pKd9ZDk6yGmfp9NKKLA3AzAQHr7ASvqzjrnSiZg1qZlI6Sgd/9PDIFtLWR26wt9FgvHvDK0AaDvHnijsQCtzmdTeGe4+2DFSbUAoW5rOLfSqkFvqd9K273WYYG8PrETqVZf2tlE/7ghiUgkYKmF4rREJA3pDQU2ooz8PVBL/X0JK6VFXWa7j2PDni8gke0uRWhPN2AARsAq3jMjy49Ckqhl3OrdZU6JBzWfAftxeEuyl478o9Wk+MLorvNLVW4fD4PcEQmEBJ1Tp6cxLMC8+VgWUkjFLw5oc+HMHZgLE2F2iEE9Z8TNUUwKmGmEqt/rV7traO9X6u2zdYSRcRw2+DX7687lrJ+Hz7ZKnLErjrGMk3KRBayvQytoPFzOC9MKKgokoMmvtyc1aXgPKiQe7AnKviPU4zn/u+lLH5VhkK9NVZnlygWgxOqb0Ba/dXFaiVw4ELYXyy2Dy7iSDCRWWZAOKoHFE2Ilbnya96Y4uSJtSto1ujTCWIWTAWA+AwyKBw5VnRQeYS7hOqFlwbglv1ylAfwrtvI3zTKcl1R2Q3P8+/S8mEPTaEQ6wj5R/ML/BeiUXo/vTj3NqQk7rq4A8mSTh1tUuk4Gba4tA1xICkh4RVaYBX5OKNFwMjBjHO5V+Wttugwsw4H36w=
