@@ -93,6 +93,7 @@
 	#else
 		#define LP3_MAIN(main_function) \
 			int WinMain(HINSTANCE, HINSTANCE, LPTSTR, int) { \
+				lp3::main::OnExitCleanUp clean_up; \
 				lp3::main::PlatformLoop loop;  \
 				return main_function(loop); \
 			}

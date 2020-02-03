@@ -72,26 +72,26 @@ install(TARGETS lp3_main EXPORT Lp3_Main-targets
     INCLUDES DESTINATION include
 )
 
-add_library(lp3::core ALIAS lp3_main)
+add_library(lp3::main ALIAS lp3_main)
 install(EXPORT Lp3_Main-targets
     FILE Lp3_Main-targets.cmake
     NAMESPACE lp3::
     DESTINATION lib/cmake/Lp3_Main
 )
 
-file(WRITE "${PROJECT_BINARY_DIR}/Lp3_Main-config.cmake" "
+file(WRITE "${PROJECT_BINARY_DIR}/Lp3_MainConfig.cmake" "
 include(CMakeFindDependencyMacro)
 include(\"\${CMAKE_CURRENT_LIST_DIR}/Lp3_Main-targets.cmake\")
 ")
 
-write_basic_package_version_file("${PROJECT_BINARY_DIR}/Lp3_Main-config-version.cmake"
+write_basic_package_version_file("${PROJECT_BINARY_DIR}/Lp3_MainConfigVersion.cmake"
     VERSION 1.0.1
     COMPATIBILITY AnyNewerVersion
 )
 
 install(FILES
-    "${PROJECT_BINARY_DIR}/Lp3_Main-config.cmake"
-    "${PROJECT_BINARY_DIR}/Lp3_Main-config-version.cmake"
+    "${PROJECT_BINARY_DIR}/Lp3_MainConfig.cmake"
+    "${PROJECT_BINARY_DIR}/Lp3_MainConfigVersion.cmake"
     DESTINATION lib/cmake/Lp3_Main
 )
 
@@ -105,16 +105,16 @@ if (NOT is_child)
 endif()
 
 if (LP3_MAIN_FULL)
-    add_executable(ExitDemo ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
+    add_executable(ExitDemo WIN32 ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
     target_link_libraries(ExitDemo lp3_main)
 
-    add_executable(MainDemo ${CMAKE_CURRENT_SOURCE_DIR}/demos/MainDemo.cpp)
+    add_executable(MainDemo WIN32 ${CMAKE_CURRENT_SOURCE_DIR}/demos/MainDemo.cpp)
     target_link_libraries(MainDemo lp3_main)
 
     if (LP3_SETUP_FOLDERS)
-        set_target_properties (lp3_main PROPERTIES FOLDER core)
-        set_target_properties (ExitDemo PROPERTIES FOLDER core)
-        set_target_properties (MainDemo PROPERTIES FOLDER core)
+        set_target_properties (lp3_main PROPERTIES FOLDER main)
+        set_target_properties (ExitDemo PROPERTIES FOLDER main)
+        set_target_properties (MainDemo PROPERTIES FOLDER main)
     endif()
     if(BUILD_SHARED_LIBS)
         if (MSVC)

@@ -1,5 +1,7 @@
 #include <lp3/main/utils.hpp>
 
+#include <optional>
+#include <stdexcept>
 #ifdef _WIN32
     #include <windows.h>
 #endif
@@ -23,11 +25,16 @@ namespace {
     std::optional<std::string> get_env_var(const char * name) {
         char * env_var_value;
         std::size_t length;
-        auto result = _dupenv_s(&env_var_value, &length, name.data());
+        auto result = _dupenv_s(&env_var_value, &length, name);
         if (0 != result) {
             return std::nullopt;
         }
         std::unique_ptr<char> delete_env_var(env_var_value);
+        if (env_var_value) {
+            return std::string{env_var_value};
+        } else {
+            return std::nullopt;
+        }
     }
 
     std::optional<std::string> write_wchat_t_to_string(wchar_t const * src)
@@ -37,12 +44,11 @@ namespace {
         const std::size_t total_length = wcslen(src);
         result.reserve(total_length);
 
-        // TODO: disable 4996 on MSVC?
-        const std::size_t converted_count
-            = wcstombs(result.data(), original, total_length);
-        // Return false if could not convert wide character string to classic
-        // char string.
-        if (converted_count != total_length) {
+        std::size_t converted_count;
+        const auto errors = wcstombs_s(
+            &converted_count, result.data(), total_length, src, total_length);
+
+        if (errors != 0 || converted_count != total_length) {
             return std::nullopt;
         } else {
             return result;
