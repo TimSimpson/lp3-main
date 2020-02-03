@@ -1,5 +1,9 @@
 # lp3-main
 
+[![Travis Build Status](https://travis-ci.org/TimSimpson/lp3-main.svg?branch=master)](https://travis-ci.org/TimSimpson/lp3-main)
+[![Build status](https://ci.appveyor.com/api/projects/status/vqcmfp6sflj902o7/branch/master?svg=true)](https://ci.appveyor.com/project/TimSimpson/lp3-main/branch/master)
+[ ![Download](https://api.bintray.com/packages/timsimpson/richter/Lp3-Main%3ATimSimpson/images/download.svg) ](https://bintray.com/timsimpson/richter/Lp3-Main%3ATimSimpson/_latestVersion)
+
 Very basic library which helps writing apps with a "platform loop."
 
 Here's an example:
