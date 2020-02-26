@@ -3,62 +3,59 @@
 #include <optional>
 #include <stdexcept>
 #ifdef _WIN32
-    #include <windows.h>
+#include <windows.h>
 #endif
-
 
 namespace {
 
 #if !defined(_WIN32)
 
-    std::optional<std::string> get_env_var(const char * name) {
-        const char * const env_var_value = getenv(name);
-        if (env_var_value) {
-            return std::string{env_var_value};
-        } else {
-            return std::nullopt;
-        }
+std::optional<std::string> get_env_var(const char * name) {
+    const char * const env_var_value = getenv(name);
+    if (env_var_value) {
+        return std::string{env_var_value};
+    } else {
+        return std::nullopt;
     }
+}
 
 #else
 
-    std::optional<std::string> get_env_var(const char * name) {
-        char * env_var_value;
-        std::size_t length;
-        auto result = _dupenv_s(&env_var_value, &length, name);
-        if (0 != result) {
-            return std::nullopt;
-        }
-        std::unique_ptr<char> delete_env_var(env_var_value);
-        if (env_var_value) {
-            return std::string{env_var_value};
-        } else {
-            return std::nullopt;
-        }
+std::optional<std::string> get_env_var(const char * name) {
+    char * env_var_value;
+    std::size_t length;
+    auto result = _dupenv_s(&env_var_value, &length, name);
+    if (0 != result) {
+        return std::nullopt;
     }
-
-    std::optional<std::string> write_wchat_t_to_string(wchar_t const * src)
-        noexcept
-    {
-        std::string result;
-        const std::size_t total_length = wcslen(src);
-        result.reserve(total_length);
-
-        std::size_t converted_count;
-        const auto errors = wcstombs_s(
-            &converted_count, result.data(), total_length, src, total_length);
-
-        if (errors != 0 || converted_count != total_length) {
-            return std::nullopt;
-        } else {
-            return result;
-        }
+    std::unique_ptr<char> delete_env_var(env_var_value);
+    if (env_var_value) {
+        return std::string{env_var_value};
+    } else {
+        return std::nullopt;
     }
+}
+
+std::optional<std::string>
+write_wchat_t_to_string(wchar_t const * src) noexcept {
+    std::string result;
+    const std::size_t total_length = wcslen(src);
+    result.reserve(total_length);
+
+    std::size_t converted_count;
+    const auto errors = wcstombs_s(&converted_count, result.data(),
+                                   total_length, src, total_length);
+
+    if (errors != 0 || converted_count != total_length) {
+        return std::nullopt;
+    } else {
+        return result;
+    }
+}
 
 #endif
 
-}
-
+} // namespace
 
 namespace lp3::main {
 
@@ -67,45 +64,37 @@ namespace {
         auto value = get_env_var("LP3_LOOP_COUNT");
         if (!value) {
             return std::nullopt;
-        }
-        else {
+        } else {
             try {
                 return std::stoi(*value);
-            } catch(const std::logic_error &) {
+            } catch (const std::logic_error &) {
                 return std::nullopt;
             }
         }
     }
+} // namespace
+
+LP3_MAIN_API
+PlatformLoop::PlatformLoop() : arguments() {
+#if defined(_WIN32)
+    int argLength;
+    LPWSTR * windows_string
+            = ::CommandLineToArgvW(GetCommandLineW(), &argLength);
+    if (nullptr == windows_string) {
+        return;
+    }
+    for (int i = 0; i < argLength; i++) {
+        const auto new_string = write_wchat_t_to_string(windows_string[i]);
+        if (new_string) {
+            this->arguments.push_back(*new_string);
+        }
+    }
+    LocalFree(windows_string);
+#endif
 }
 
 LP3_MAIN_API
-PlatformLoop::PlatformLoop()
-:   arguments()
-{
-    #if defined(_WIN32)
-        int argLength;
-        LPWSTR * windows_string = ::CommandLineToArgvW(
-            GetCommandLineW(), &argLength
-        );
-        if (nullptr == windows_string)
-        {
-            return;
-        }
-        for(int i = 0; i < argLength; i ++)
-        {
-            const auto new_string = write_wchat_t_to_string(windows_string[i]);
-            if (new_string) {
-                this->arguments.push_back(*new_string);
-            }
-        }
-        LocalFree(windows_string);
-    #endif
-}
-
-LP3_MAIN_API
-PlatformLoop::PlatformLoop(int argc, char ** argv)
-:   arguments()
-{
+PlatformLoop::PlatformLoop(int argc, char ** argv) : arguments() {
     for (int i = 0; i < argc; i++) {
         this->arguments.push_back(argv[i]);
     }
@@ -122,12 +111,14 @@ int PlatformLoop::run(std::function<bool()> iterate) {
         const auto count = loop_count();
         if (count) {
             int c = *count;
-            while(iterate() && (--c) < 0) {}
+            while (iterate() && (--c) < 0) {
+            }
         } else {
-            while(iterate()) {}
+            while (iterate()) {
+            }
         }
     }
     return 0;
 }
 
-}
+} // namespace lp3::main

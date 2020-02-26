@@ -1,5 +1,5 @@
-#include <optional>
 #include <GL/glfw.h>
+#include <optional>
 ///#include <emscripten/emscripten.h>
 #include <emscripten.h>
 
@@ -43,32 +43,26 @@ namespace {
     }
 
     class SetGlobalIterateToNullOnDestruct {
-    public:
-        ~SetGlobalIterateToNullOnDestruct() {
-            global_iterate = nullptr;
-        }
+      public:
+        ~SetGlobalIterateToNullOnDestruct() { global_iterate = nullptr; }
     };
 
     void do_loop() {
         if (global_iterate) {
-            (*global_iterate)();  // return value is ignored
+            (*global_iterate)(); // return value is ignored
         }
     }
 
-}
+} // namespace
 
-PlatformLoop::PlatformLoop()
-:   arguments()
-{
+PlatformLoop::PlatformLoop() : arguments() {
     if (global_instances >= 1) {
         throw std::logic_error("Platform Loop cannot be created twice.");
     }
     ++global_instances;
 }
 
-PlatformLoop::PlatformLoop(int argc, char ** argv)
-:   arguments()
-{
+PlatformLoop::PlatformLoop(int argc, char ** argv) : arguments() {
     if (global_instances >= 1) {
         throw std::logic_error("Platform Loop cannot be created twice.");
     }
@@ -89,9 +83,11 @@ int PlatformLoop::run(std::function<bool()> iterate) {
             const auto count = loop_count();
             if (count) {
                 int c = *count;
-                while(iterate() && (--c) < 0) {}
+                while (iterate() && (--c) < 0) {
+                }
             } else {
-                while(iterate()) {}
+                while (iterate()) {
+                }
             }
         }
     } else {
@@ -105,4 +101,4 @@ int PlatformLoop::run(std::function<bool()> iterate) {
     return 0;
 }
 
-}
+} // namespace lp3::main

@@ -40,62 +40,61 @@
 //      explicitly include ``<lp3/main.hpp>``.
 // ---------------------------------------------------------------------------/
 #ifdef FILE_LP3_MAIN_HPP
-    #error "This file should only be included once."
+#error "This file should only be included once."
 #endif
 #define FILE_LP3_MAIN_HPP
 #pragma once
 
 // Handle VC++ leak checker stuff
 #if defined(_WIN32) && defined(_DEBUG)
-	#define _CRTDBG_MAP_ALLOC
-	#include <stdlib.h>
-	#pragma warning(push, 0)
-		#include <crtdbg.h>
-	#pragma warning(pop)
-#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#pragma warning(push, 0)
+#include <crtdbg.h>
+#pragma warning(pop)
+#define DEBUG_NEW new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #define new DEBUG_NEW
 #endif
 
 #include "main/utils.hpp"
 #define SDL_MAIN_HANDLED
 
-
 #if !defined(_WIN32)
 // Non-Windows ---------------------------------------------------------------
-	#define LP3_MAIN(main_function) \
-		int main(int argc, char* argv[]) { \
-			lp3::main::OnExitCleanUp clean_up; \
-			lp3::main::PlatformLoop loop(argc, argv); \
-			return main_function(loop); \
-		}
+#define LP3_MAIN(main_function)                                                \
+    int main(int argc, char * argv[]) {                                        \
+        lp3::main::OnExitCleanUp clean_up;                                     \
+        lp3::main::PlatformLoop loop(argc, argv);                              \
+        return main_function(loop);                                            \
+    }
 #else
 #include <windows.h>
 
-	// Just use "WIN32" flag in CMake
-	// #pragma comment( linker, "/subsystem:windows" )
+// Just use "WIN32" flag in CMake
+// #pragma comment( linker, "/subsystem:windows" )
 
-	#if _DEBUG
-		#define LP3_MAIN(main_function) \
-			int WinMain(HINSTANCE, HINSTANCE, LPTSTR, int) { \
-				_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);	\
-				int result; \
-				{	\
-					lp3::main::OnExitCleanUp clean_up; \
-					lp3::main::PlatformLoop loop; \
-					result = main_function(loop); \
-				}	\
-				if (_CrtDumpMemoryLeaks()) {	\
-					__debugbreak();	\
-					return 1; \
-				}	\
-				return result;	\
-			}
-	#else
-		#define LP3_MAIN(main_function) \
-			int WinMain(HINSTANCE, HINSTANCE, LPTSTR, int) { \
-				lp3::main::OnExitCleanUp clean_up; \
-				lp3::main::PlatformLoop loop;  \
-				return main_function(loop); \
-			}
-	#endif
+#if _DEBUG
+#define LP3_MAIN(main_function)                                                \
+    int WinMain(HINSTANCE, HINSTANCE, LPTSTR, int) {                           \
+        _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);                      \
+        int result;                                                            \
+        {                                                                      \
+            lp3::main::OnExitCleanUp clean_up;                                 \
+            lp3::main::PlatformLoop loop;                                      \
+            result = main_function(loop);                                      \
+        }                                                                      \
+        if (_CrtDumpMemoryLeaks()) {                                           \
+            __debugbreak();                                                    \
+            return 1;                                                          \
+        }                                                                      \
+        return result;                                                         \
+    }
+#else
+#define LP3_MAIN(main_function)                                                \
+    int WinMain(HINSTANCE, HINSTANCE, LPTSTR, int) {                           \
+        lp3::main::OnExitCleanUp clean_up;                                     \
+        lp3::main::PlatformLoop loop;                                          \
+        return main_function(loop);                                            \
+    }
+#endif
 #endif

@@ -24,7 +24,7 @@ struct Data {
 };
 
 namespace {
-    lp3::main::GlobalVar<std::map<std::string, Data>> data;
+lp3::main::GlobalVar<std::map<std::string, Data>> data;
 }
 
 struct RegisterData {
@@ -32,9 +32,7 @@ struct RegisterData {
         data.get()[std::string(name)] = Data{name, desc};
     }
 
-    ~RegisterData() {
-        std::cout << "Register data is being deleted...\n";
-    }
+    ~RegisterData() { std::cout << "Register data is being deleted...\n"; }
 };
 
 RegisterData data_1("Tim", "Author");
@@ -43,15 +41,15 @@ RegisterData data_2("C++", "Language");
 int _main(lp3::main::PlatformLoop &) {
     std::cout << "Let's play with crazy global data.\n";
 
-	for (auto & e : data.get()) {
-		if (e.first != e.second.name) {
+    for (auto & e : data.get()) {
+        if (e.first != e.second.name) {
             std::cerr << "Error! :";
         }
         std::cout << e.first << " - " << e.second.desc << "\n";
-	}
+    }
 
     std::cout << "Good bye.\n";
-	return 0;
+    return 0;
 }
 
 LP3_MAIN(_main)

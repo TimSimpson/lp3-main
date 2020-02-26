@@ -5,19 +5,18 @@
 
 #include <lp3/main.hpp>
 
-
 int _main(lp3::main::PlatformLoop & loop) {
     std::cout << "Greetings from the MicroMain Demo.\n";
 
-	int index = 0;
-    for(const std::string & element : loop.command_line_args()) {
+    int index = 0;
+    for (const std::string & element : loop.command_line_args()) {
         std::cout << "[" << index << "] = " << element << "\n";
-        ++ index;
+        ++index;
     }
 
     const auto result = loop.run([&]() {
         // This gets called each frame until false is returned.
-		return false;
+        return false;
     });
 
     std::cout << "Good bye.\n";
