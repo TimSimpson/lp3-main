@@ -1,13 +1,18 @@
 os: Visual Studio 2019
 
 environment:
-    PYTHON: "C:\\Python37"
+    PYTHON: "C:\Python37"
 
     matrix:
+
         - PROFILE:  msvc-d-shared
         - PROFILE:  msvc-r-static
+
 install:
-  - git submodule update --init
+  - git clone git@github.com:TimSimpson/ci-land.git ci
+  - cd ci-land
+  - git checkout 066a5848ced77ff4e5ddc67e60613b7a29887a30
+  - cd ..
   - ci\cpp\conan\appveyor\install.bat
 
 build_script:
