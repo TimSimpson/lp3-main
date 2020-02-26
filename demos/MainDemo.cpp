@@ -20,7 +20,7 @@ int _main(lp3::main::PlatformLoop & loop) {
 		return false;
     });
 
-    std::cout << "Good bye.";
+    std::cout << "Good bye.\n";
     return result;
 }
 
