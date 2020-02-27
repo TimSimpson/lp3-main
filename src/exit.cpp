@@ -1,21 +1,20 @@
-#include <lp3/main/utils.hpp>
 #include <list>
+#include <lp3/main/utils.hpp>
 #include <mutex>
 #include <thread>
-
 
 namespace lp3::main {
 
 namespace {
 
-    typedef void(*ExitCall)();
+    typedef void (*ExitCall)();
 
     // Visual C++'s memory leak detector complains if a typical global variable
     // is used for a complex type, but not if we use a pointer, which coerces
     // some of the anti-patterns seen here.
-    static std::list<GlobalResource *> * & get_globals() {
+    static std::list<GlobalResource *> *& get_globals() {
         static std::list<GlobalResource *> * calls
-			= new std::list<GlobalResource *>();
+                = new std::list<GlobalResource *>();
         return calls;
     }
 
@@ -26,9 +25,9 @@ namespace {
         if (get_globals() == nullptr) {
             return;
         }
-		for (auto p : *get_globals()) {
-			delete p;
-		}
+        for (auto p : *get_globals()) {
+            delete p;
+        }
         delete get_globals();
         get_globals() = nullptr;
     }
@@ -39,11 +38,9 @@ namespace {
     // OnExitCleanUp class from the LP3_MAIN macro, which means this
     // may get called a second time which can be ignored.
     struct AuxCleaner {
-        ~AuxCleaner() {
-            clean_up();
-        }
+        ~AuxCleaner() { clean_up(); }
     } aux_cleaner;
-}
+} // namespace
 
 LP3_MAIN_API
 OnExitCleanUp::OnExitCleanUp() {
@@ -66,9 +63,9 @@ OnExitCleanUp::~OnExitCleanUp() {
 
 LP3_MAIN_API
 void on_exit_clean_up(GlobalResource * gr) {
-	static std::mutex _mutex;
-	std::lock_guard<std::mutex> guard(_mutex);
-	get_globals()->emplace_back(gr);
+    static std::mutex _mutex;
+    std::lock_guard<std::mutex> guard(_mutex);
+    get_globals()->emplace_back(gr);
 }
 
-}
+} // namespace lp3::main
