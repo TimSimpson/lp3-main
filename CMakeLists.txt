@@ -103,11 +103,10 @@ endif()
 
 function(make_test exe_target)
     if("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
-        add_test(NAME "test_$<TARGET_FILE_NAME:${exe_target}>"
-                 COMMAND node $<TARGET_FILE:${exe_target}>)
+        add_test(NAME "test_${exe_target}" COMMAND node
+                                                   $<TARGET_FILE:${exe_target}>)
     else()
-        add_test(NAME "test_$<TARGET_FILE_NAME:${exe_target}>"
-                 COMMAND exe_target)
+        add_test(NAME "test_${exe_target}" COMMAND ${exe_target})
     endif()
 endfunction()
 
