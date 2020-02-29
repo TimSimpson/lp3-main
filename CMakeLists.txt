@@ -101,10 +101,21 @@ if(NOT is_child)
     set(LP3_MAIN_FULL True)
 endif()
 
+function(make_test exe_target)
+    if("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
+        add_test(NAME "test_$<TARGET_FILE_NAME:${exe_target}>"
+                 COMMAND node $<TARGET_FILE:${exe_target}>)
+    else()
+        add_test(NAME "test_$<TARGET_FILE_NAME:${exe_target}>"
+                 COMMAND exe_target)
+    endif()
+endfunction()
+
 if(LP3_MAIN_FULL)
     add_executable(ExitDemo WIN32
                    ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
     target_link_libraries(ExitDemo lp3_main)
+    make_test(ExitDemo)
 
     add_executable(MainDemo WIN32
                    ${CMAKE_CURRENT_SOURCE_DIR}/demos/MainDemo.cpp)
