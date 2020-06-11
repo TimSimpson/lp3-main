@@ -9,7 +9,7 @@ clang-linux: &clang-linux
     apt:
       sources:
         - ubuntu-toolchain-r-test
-        - llvm-toolchain-trusty-8
+        - llvm-toolchain-bionic-8
       packages:
         - clang-8
         - libstdc++-8-dev
@@ -32,7 +32,7 @@ osx: &osx
 
 install:
   - git clone https://github.com/TimSimpson/ci-land.git ci
-  - pushd ci && git checkout 2e75e8bc996ac16ae6b2ddb1bb8be1f20da05559 && popd
+  - pushd ci && git checkout 3f0e77a79836a194ec2e5745341919bd6b9cc2c1 && popd
   - ./ci/cpp/conan/travis/install.sh
 
 script:
