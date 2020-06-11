@@ -37,18 +37,23 @@ std::optional<std::string> get_env_var(const char * name) {
 }
 
 std::optional<std::string>
-write_wchat_t_to_string(wchar_t const * src) noexcept {
-    std::string result;
+write_wchar_t_to_string(wchar_t const * src) noexcept {    
     const std::size_t total_length = wcslen(src);
-    result.reserve(total_length);
+    // The function may need one extra here according to the docs
+    // as it always puts a \0, even if doing that means writing 
+    // one past the argument sent in.
+    const std::size_t buffer_size = total_length + 1;
+    std::string result(buffer_size, ' ');
 
     std::size_t converted_count;
     const auto errors = wcstombs_s(&converted_count, result.data(),
-                                   total_length, src, total_length);
+                                   buffer_size, src, total_length);
 
-    if (errors != 0 || converted_count != total_length) {
+    if (errors != 0 || converted_count < total_length || converted_count > buffer_size) {
+        // Remove last byte, needed for the '\0' (if one was written)        
         return std::nullopt;
     } else {
+        result.resize(total_length);
         return result;
     }
 }
@@ -84,7 +89,7 @@ PlatformLoop::PlatformLoop() : arguments() {
         return;
     }
     for (int i = 0; i < argLength; i++) {
-        const auto new_string = write_wchat_t_to_string(windows_string[i]);
+        const auto new_string = write_wchar_t_to_string(windows_string[i]);
         if (new_string) {
             this->arguments.push_back(*new_string);
         }
