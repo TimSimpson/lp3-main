@@ -55,6 +55,13 @@ class Lp3Main(conans.ConanFile):
     def package_info(self):
         self.cpp_info.name = "lp3-main"
         self.cpp_info.libs = [ "lp3-main" ]
+        self.cpp_info.cmake_find_package_coda = """
+
+add_library(lp3::main INTERFACE IMPORTED)
+set_target_properties(lp3::main PROPERTIES INTERFACE_LINK_LIBRARIES lp3-main::lp3-main)
+
+        """
+
         # self.cpp_info.libs = ["lp3-main"]
         # # self.cpp_info.names["cmake_find_package"] = "Lp3-Main"
         # # self.cpp_info.names["cmake_find_package_multi"] = "Lp3"
