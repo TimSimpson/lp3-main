@@ -32,7 +32,7 @@ osx: &osx
 
 install:
   - git clone https://github.com/TimSimpson/ci-land.git ci
-  - pushd ci && git checkout 3f0e77a79836a194ec2e5745341919bd6b9cc2c1 && popd
+  - pushd ci && git checkout 4dd39c78db7cc68529a9432e1b02f8f8967d8e27 && popd
   - ./ci/cpp/conan/travis/install.sh
 
 script:

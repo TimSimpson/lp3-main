@@ -2,7 +2,7 @@ import conans
 
 class TestPackage(conans.ConanFile):
 
-    generators = "cmake_paths"
+    generators = "cmake_find_package"
     settings = "os", "compiler", "build_type", "arch"
 
     def build(self):
