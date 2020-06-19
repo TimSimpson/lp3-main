@@ -1,8 +1,8 @@
 # *********************************************************************
 # LP3_MAIN
-#       Simplifies writing game "main.cpp" files.
+#       Simplifies writing game "lp3-main.cpp" files.
 # *********************************************************************
-project(Lp3_Main CXX)
+project(lp3-main CXX)
 cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
 include(CMakePackageConfigHelpers)
 
@@ -16,18 +16,18 @@ if(using_conan)
 endif()
 
 add_library(
-    lp3_main
+    lp3-main
     ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/main.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/main/config.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/lp3/main/utils.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/exit.cpp)
-set_target_properties(lp3_main PROPERTIES OUTPUT_NAME "Lp3_Main")
+set_target_properties(lp3-main PROPERTIES OUTPUT_NAME "lp3-main")
 
 # Mandate the use of at least C++17 by everything that uses this
-target_compile_features(lp3_main PUBLIC cxx_std_17)
+target_compile_features(lp3-main PUBLIC cxx_std_17)
 
 target_include_directories(
-    lp3_main
+    lp3-main
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
            $<INSTALL_INTERFACE:include>
     PRIVATE src)
@@ -38,19 +38,19 @@ target_include_directories(
 # of a problem with VS, but now it is, thus the disabled warnings.
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(
-        lp3_main
+        lp3-main
         PUBLIC LP3_MAIN_API_DYNAMIC
         PRIVATE LP3_MAIN_API_CREATE)
     if(MSVC)
-        target_compile_options(lp3_main PRIVATE /wd4251 /wd4275)
+        target_compile_options(lp3-main PRIVATE /wd4251 /wd4275)
     endif()
 endif()
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
-    target_sources(lp3_main
+    target_sources(lp3-main
                    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/js/platform.cpp)
 else()
-    target_sources(lp3_main
+    target_sources(lp3-main
                    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/platform.cpp)
 endif()
 
@@ -61,36 +61,36 @@ endif()
 install(DIRECTORY include/ DESTINATION include)
 
 install(
-    TARGETS lp3_main
-    EXPORT Lp3_Main-targets
+    TARGETS lp3-main
+    EXPORT lp3-main-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     INCLUDES
     DESTINATION include)
 
-add_library(lp3::main ALIAS lp3_main)
+add_library(lp3-main::lp3-main ALIAS lp3-main)
 install(
-    EXPORT Lp3_Main-targets
-    FILE Lp3_Main-targets.cmake
-    NAMESPACE lp3::
-    DESTINATION lib/cmake/Lp3_Main)
+    EXPORT lp3-main-targets
+    FILE lp3-main-targets.cmake
+    NAMESPACE lp3-main::
+    DESTINATION lib/cmake/lp3-main)
 
 file(
-    WRITE "${PROJECT_BINARY_DIR}/Lp3_MainConfig.cmake"
+    WRITE "${PROJECT_BINARY_DIR}/lp3-mainConfig.cmake"
     "
 include(CMakeFindDependencyMacro)
-include(\"\${CMAKE_CURRENT_LIST_DIR}/Lp3_Main-targets.cmake\")
+include(\"\${CMAKE_CURRENT_LIST_DIR}/lp3-main-targets.cmake\")
 ")
 
 write_basic_package_version_file(
-    "${PROJECT_BINARY_DIR}/Lp3_MainConfigVersion.cmake"
+    "${PROJECT_BINARY_DIR}/lp3-mainConfigVersion.cmake"
     VERSION 1.0.1
     COMPATIBILITY AnyNewerVersion)
 
-install(FILES "${PROJECT_BINARY_DIR}/Lp3_MainConfig.cmake"
-              "${PROJECT_BINARY_DIR}/Lp3_MainConfigVersion.cmake"
-        DESTINATION lib/cmake/Lp3_Main)
+install(FILES "${PROJECT_BINARY_DIR}/lp3-mainConfig.cmake"
+              "${PROJECT_BINARY_DIR}/lp3-mainConfigVersion.cmake"
+        DESTINATION lib/cmake/lp3-main)
 
 # *********************************************************************
 # Tests and Drivers / Demos
@@ -113,23 +113,23 @@ endfunction()
 if(LP3_MAIN_FULL)
     add_executable(ExitDemo WIN32
                    ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
-    target_link_libraries(ExitDemo lp3_main)
+    target_link_libraries(ExitDemo lp3-main)
     make_test(ExitDemo)
 
     add_executable(MainDemo WIN32
                    ${CMAKE_CURRENT_SOURCE_DIR}/demos/MainDemo.cpp)
-    target_link_libraries(MainDemo lp3_main)
+    target_link_libraries(MainDemo lp3-main)
 
     add_executable(WinConsoleTest
                    ${CMAKE_CURRENT_SOURCE_DIR}/demos/WinConsoleTest.cpp)
-    target_link_libraries(WinConsoleTest lp3_main)
+    target_link_libraries(WinConsoleTest lp3-main)
     make_test(WinConsoleTest)
 
     if(LP3_SETUP_FOLDERS)
-        set_target_properties(lp3_main PROPERTIES FOLDER main)
-        set_target_properties(ExitDemo PROPERTIES FOLDER main)
-        set_target_properties(MainDemo PROPERTIES FOLDER main)
-        set_target_properties(WinConsoleTest PROPERTIES FOLDER main)
+        set_target_properties(lp3-main PROPERTIES FOLDER lp3-main)
+        set_target_properties(ExitDemo PROPERTIES FOLDER lp3-main)
+        set_target_properties(MainDemo PROPERTIES FOLDER lp3-main)
+        set_target_properties(WinConsoleTest PROPERTIES FOLDER lp3-main)
     endif()
     if(BUILD_SHARED_LIBS)
         if(MSVC)
