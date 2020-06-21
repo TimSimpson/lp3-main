@@ -43,7 +43,9 @@ class Lp3Main(conans.ConanFile):
 
     def _configed_cmake(self):
         cmake = conans.CMake(self)
-        cmake.configure()
+        cmake.configure(defs={
+            "LP3_MAIN_Build_Tests": self.tests_enabled,
+        })
         return cmake
 
     def build(self):
