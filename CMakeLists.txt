@@ -2,18 +2,20 @@
 # LP3_MAIN
 #       Simplifies writing game "lp3-main.cpp" files.
 # *********************************************************************
-project(lp3-main CXX)
 cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
+
+if(NOT DEFINED PROJECT_NAME)
+    set(NOT_SUBPROJECT ON)
+endif()
+
+project(lp3-main CXX)
+
+include(CTest)
 include(CMakePackageConfigHelpers)
 
-enable_testing()
-
-include("${CMAKE_BINARY_DIR}/conan_paths.cmake" OPTIONAL
-        RESULT_VARIABLE using_conan)
-
-if(using_conan)
-    set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
-endif()
+# Allow user to ask explicitly to build tests
+option(LP3_MAIN_Build_Tests "Build tests when BUILD_TESTING is enabled."
+       ${NOT_SUBPROJECT})
 
 add_library(
     lp3-main
@@ -55,6 +57,52 @@ else()
 endif()
 
 # *********************************************************************
+# Tests and Drivers / Demos
+# *********************************************************************
+
+if(BUILD_TESTING AND LP3_MAIN_Build_Tests)
+    find_package(Catch2 REQUIRED)
+
+    function(make_test exe_target)
+        if("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
+            add_test(NAME "test_${exe_target}" COMMAND node
+                                                       $<TARGET_FILE:${exe_target}>)
+        else()
+            add_test(NAME "test_${exe_target}" COMMAND ${exe_target})
+        endif()
+    endfunction()
+
+    add_executable(ExitDemo WIN32
+                   ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
+    target_link_libraries(ExitDemo lp3-main)
+    make_test(ExitDemo)
+
+    add_executable(MainDemo WIN32
+                   ${CMAKE_CURRENT_SOURCE_DIR}/demos/MainDemo.cpp)
+    target_link_libraries(MainDemo lp3-main)
+
+    add_executable(WinConsoleTest
+                   ${CMAKE_CURRENT_SOURCE_DIR}/demos/WinConsoleTest.cpp)
+    target_link_libraries(WinConsoleTest lp3-main)
+    make_test(WinConsoleTest)
+
+    if(LP3_SETUP_FOLDERS)
+        set_target_properties(lp3-main PROPERTIES FOLDER lp3-main)
+        set_target_properties(ExitDemo PROPERTIES FOLDER lp3-main)
+        set_target_properties(MainDemo PROPERTIES FOLDER lp3-main)
+        set_target_properties(WinConsoleTest PROPERTIES FOLDER lp3-main)
+    endif()
+
+    if(BUILD_SHARED_LIBS)
+        if(MSVC)
+            target_compile_options(ExitDemo PRIVATE /wd4251 /wd4275)
+            target_compile_options(MainDemo PRIVATE /wd4251 /wd4275)
+            target_compile_options(WinConsoleTest PRIVATE /wd4251 /wd4275)
+        endif()
+    endif()
+endif()
+
+# *********************************************************************
 # Package / Install Stuff
 # *********************************************************************
 
@@ -91,51 +139,3 @@ write_basic_package_version_file(
 install(FILES "${PROJECT_BINARY_DIR}/lp3-mainConfig.cmake"
               "${PROJECT_BINARY_DIR}/lp3-mainConfigVersion.cmake"
         DESTINATION lib/cmake/lp3-main)
-
-# *********************************************************************
-# Tests and Drivers / Demos
-# *********************************************************************
-
-get_directory_property(is_child PARENT_DIRECTORY)
-if(NOT is_child)
-    set(LP3_MAIN_FULL True)
-endif()
-
-function(make_test exe_target)
-    if("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
-        add_test(NAME "test_${exe_target}" COMMAND node
-                                                   $<TARGET_FILE:${exe_target}>)
-    else()
-        add_test(NAME "test_${exe_target}" COMMAND ${exe_target})
-    endif()
-endfunction()
-
-if(LP3_MAIN_FULL)
-    add_executable(ExitDemo WIN32
-                   ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
-    target_link_libraries(ExitDemo lp3-main)
-    make_test(ExitDemo)
-
-    add_executable(MainDemo WIN32
-                   ${CMAKE_CURRENT_SOURCE_DIR}/demos/MainDemo.cpp)
-    target_link_libraries(MainDemo lp3-main)
-
-    add_executable(WinConsoleTest
-                   ${CMAKE_CURRENT_SOURCE_DIR}/demos/WinConsoleTest.cpp)
-    target_link_libraries(WinConsoleTest lp3-main)
-    make_test(WinConsoleTest)
-
-    if(LP3_SETUP_FOLDERS)
-        set_target_properties(lp3-main PROPERTIES FOLDER lp3-main)
-        set_target_properties(ExitDemo PROPERTIES FOLDER lp3-main)
-        set_target_properties(MainDemo PROPERTIES FOLDER lp3-main)
-        set_target_properties(WinConsoleTest PROPERTIES FOLDER lp3-main)
-    endif()
-    if(BUILD_SHARED_LIBS)
-        if(MSVC)
-            target_compile_options(ExitDemo PRIVATE /wd4251 /wd4275)
-            target_compile_options(MainDemo PRIVATE /wd4251 /wd4275)
-            target_compile_options(WinConsoleTest PRIVATE /wd4251 /wd4275)
-        endif()
-    endif()
-endif()
