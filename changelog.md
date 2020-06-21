@@ -1,5 +1,9 @@
 # Change Log
 
+### 1.0.5 2020-06-20
+
+Only builds tests / drivers if BUILD_TESTING and LP3_MAIN_Build_Tests is set. This is to avoid building and running tests when creating recipes. It also keeps test dependencies out of the build requirements.
+
 ### 1.0.4 2020-06-19 find_package name changed
 
 The CMake targets have changed to the following:
