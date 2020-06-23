@@ -138,4 +138,5 @@ write_basic_package_version_file(
 
 install(FILES "${PROJECT_BINARY_DIR}/lp3-mainConfig.cmake"
               "${PROJECT_BINARY_DIR}/lp3-mainConfigVersion.cmake"
+               ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ConanFindModuleExtra.cmake
         DESTINATION lib/cmake/lp3-main)

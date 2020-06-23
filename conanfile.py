@@ -38,7 +38,7 @@ class Lp3Main(conans.ConanFile):
     generators = "cmake_find_package"
 
     exports_sources = (
-        "src/*", "include/*", "demos/*", "tests/*", "CMakeLists.txt"
+        "src/*", "include/*", "demos/*", "tests/*", "CMakeLists.txt", "cmake/*",
     )
 
     def _configed_cmake(self):
@@ -59,3 +59,9 @@ class Lp3Main(conans.ConanFile):
     def package_info(self):
         self.cpp_info.name = "lp3-main"
         self.cpp_info.libs = [ "lp3-main" ]
+        self.cpp_info.build_modules = [
+            os.path.join(
+                self.package_folder,
+                "lib/cmake/lp3-main/ConanFindModuleExtra.cmake"
+            )
+        ]
