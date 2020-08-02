@@ -5,7 +5,7 @@ import conans
 
 class Lp3Main(conans.ConanFile):
     name = "Lp3-Main"
-    version = "1.0.5"
+    version = "1.0.6"
     license = "Zlib"
     author = "Tim Simpson"
     url = "https://github.com/TimSimpson/Lp3-Main"
