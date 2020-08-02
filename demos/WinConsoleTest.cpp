@@ -7,7 +7,7 @@
 
 #include <lp3/main.hpp>
 
-int main(int argc, const char * * argv) {
+int main(int argc, const char ** argv) {
     std::cout << "Console test.\n";
 
     lp3::main::PlatformLoop loop;

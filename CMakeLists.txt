@@ -49,11 +49,9 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 if("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
-    target_sources(main
-                   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/js/platform.cpp)
+    target_sources(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/js/platform.cpp)
 else()
-    target_sources(main
-                   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/platform.cpp)
+    target_sources(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/platform.cpp)
 endif()
 
 # *********************************************************************
@@ -65,15 +63,15 @@ if(BUILD_TESTING AND LP3_MAIN_Build_Tests)
 
     function(make_test exe_target)
         if("${CMAKE_SYSTEM_NAME}" MATCHES "Emscripten")
-            add_test(NAME "test_${exe_target}" COMMAND node
-                                                       $<TARGET_FILE:${exe_target}>)
+            add_test(NAME "test_${exe_target}"
+                     COMMAND node $<TARGET_FILE:${exe_target}>)
         else()
             add_test(NAME "test_${exe_target}" COMMAND ${exe_target})
         endif()
     endfunction()
 
     add_executable(ExitDemo WIN32
-               ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
+                   ${CMAKE_CURRENT_SOURCE_DIR}/demos/ExitDemo.cpp)
     target_link_libraries(ExitDemo main)
     make_test(ExitDemo)
 
