@@ -5,7 +5,7 @@ import conans
 
 class Lp3Main(conans.ConanFile):
     name = "Lp3-Main"
-    version = "1.0.5"
+    version = "1.0.6"
     license = "Zlib"
     author = "Tim Simpson"
     url = "https://github.com/TimSimpson/Lp3-Main"
@@ -58,4 +58,12 @@ class Lp3Main(conans.ConanFile):
 
     def package_info(self):
         self.cpp_info.name = "lp3-main"
-        self.cpp_info.libs = [ "lp3-main" ]
+        _set_for_cmake(self.cpp_info.filenames, "lp3-main")
+        _set_for_cmake(self.cpp_info.names, "lp3")
+        _set_for_cmake(self.cpp_info.components['main'].names, "main")
+        self.cpp_info.components['main'].libs = [ "lp3-main" ]
+
+
+def _set_for_cmake(attr, value):
+    for generator in ['cmake_find_package', 'cmake_find_package_multi']:
+        attr[generator] = value

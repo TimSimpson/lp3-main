@@ -37,20 +37,21 @@ std::optional<std::string> get_env_var(const char * name) {
 }
 
 std::optional<std::string>
-write_wchar_t_to_string(wchar_t const * src) noexcept {    
+write_wchar_t_to_string(wchar_t const * src) noexcept {
     const std::size_t total_length = wcslen(src);
     // The function may need one extra here according to the docs
-    // as it always puts a \0, even if doing that means writing 
+    // as it always puts a \0, even if doing that means writing
     // one past the argument sent in.
     const std::size_t buffer_size = total_length + 1;
     std::string result(buffer_size, ' ');
 
     std::size_t converted_count;
-    const auto errors = wcstombs_s(&converted_count, result.data(),
-                                   buffer_size, src, total_length);
+    const auto errors = wcstombs_s(&converted_count, result.data(), buffer_size,
+                                   src, total_length);
 
-    if (errors != 0 || converted_count < total_length || converted_count > buffer_size) {
-        // Remove last byte, needed for the '\0' (if one was written)        
+    if (errors != 0 || converted_count < total_length
+        || converted_count > buffer_size) {
+        // Remove last byte, needed for the '\0' (if one was written)
         return std::nullopt;
     } else {
         result.resize(total_length);
