@@ -1,5 +1,9 @@
 # Change Log
 
+### 1.0.7 2020-08-02
+
+Changed the Conan name of the project from `Lp3-Main` to `lp3-main` for consistency.
+
 ### 1.0.6 2020-08-02
 
 The CMake targets have changed to the following:
