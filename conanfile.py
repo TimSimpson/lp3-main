@@ -4,11 +4,11 @@ import conans
 
 
 class Lp3Main(conans.ConanFile):
-    name = "Lp3-Main"
-    version = "1.0.6"
+    name = "lp3-main"
+    version = "1.0.7"
     license = "Zlib"
     author = "Tim Simpson"
-    url = "https://github.com/TimSimpson/Lp3-Main"
+    url = "https://github.com/TimSimpson/lp3-main"
     description = "simple game app helper library"
 
     settings = "os", "compiler", "build_type", "arch"
