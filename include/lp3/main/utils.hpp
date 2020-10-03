@@ -8,8 +8,14 @@
 #include <utility>
 #include <vector>
 
-namespace lp3 {
-namespace main {
+// The SDL had this horrible idea of creating a macro named "main". Literally,
+// it might be the stupidest idea ever. So if `main` is defined, undefine it
+// here.
+#ifdef main
+#undef main
+#endif
+
+namespace lp3::main {
 
     // --------------------------------------------------------------------
     // class PlatformLoop
@@ -101,7 +107,6 @@ namespace main {
     };
     // ~end-doc
 
-} // namespace main
-} // namespace lp3
+} // namespace
 
 #endif

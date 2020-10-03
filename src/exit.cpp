@@ -3,6 +3,11 @@
 #include <mutex>
 #include <thread>
 
+// make sure Mr. SDL doesn't screw everything up.
+#ifdef main
+#undef main
+#endif
+
 namespace lp3::main {
 
 namespace {
