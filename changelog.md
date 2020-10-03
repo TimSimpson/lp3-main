@@ -1,5 +1,13 @@
 # Change Log
 
+### 1.0.8 2020-10-03
+
+I hit an issue in a project using SDL2 and lp3-main. Linker errors said a symbol in namespace `lp3::SDL_main` was not found.
+
+It turns out the author of the SDL2 libraries thought it'd be a cool idea to have a "macro" named "main." It's nice of them to do that because so many people who use the SDL2 libraries probably miss having to #undef the ten billion things windows.h brings into their code, so it's good that a new library written in this century could carry on the tradition of macros based on common words that most people will only use by mistake.
+
+Anyway I added some `#unsets` to the code to prevent any problems.
+
 ### 1.0.7 2020-08-02
 
 Changed the Conan name of the project from `Lp3-Main` to `lp3-main` for consistency.
